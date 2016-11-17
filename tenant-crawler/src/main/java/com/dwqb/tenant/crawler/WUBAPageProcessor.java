@@ -31,7 +31,10 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
 
             page.addTargetRequests(list);
 
+            // TODO: 16/11/17 获取下一页链接  
+
         }else{                                                              //详情页
+            // TODO: 16/11/17 解析详情页 
             logger.info(url);
         }
 
