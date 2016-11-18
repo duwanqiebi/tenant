@@ -8,7 +8,7 @@
 
     <import resource="classpath*:spring/applicationContext-redis.xml"/>
 
-    <bean class="us.codecraft.webmagic.scheduler.RedisScheduler">
+    <bean id="myRedisSchedule" class="com.dwqb.tenant.crawler.schedule.MyRedisSchedule">
         <constructor-arg name="pool" ref="jedisPool"/>
     </bean>
 

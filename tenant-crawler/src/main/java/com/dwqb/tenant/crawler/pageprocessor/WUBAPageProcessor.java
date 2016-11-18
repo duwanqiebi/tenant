@@ -1,4 +1,4 @@
-package com.dwqb.tenant.crawler;
+package com.dwqb.tenant.crawler.pageprocessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.dwqb.tenant.crawler;
+package com.dwqb.tenant.crawler.pageprocessor;
 
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
