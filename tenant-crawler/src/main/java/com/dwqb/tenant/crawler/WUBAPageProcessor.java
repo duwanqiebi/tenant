@@ -6,9 +6,6 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -21,20 +18,19 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
     public void process(Page page) {
         String url = page.getUrl().toString();
 
-        Html html = null;
+        Html html;
         if(url.matches("[a-zA-z]+://bj.58.com[^s]*pn[\\d]+[^s]*")){         //目录页
             html = page.getHtml();
 
             //获取明细url
             Selectable selectable = html.xpath("body/div/div/div/table/tbody/tr/td/a").links();
             List<String> list = selectable.all();
-
             page.addTargetRequests(list);
 
-            // TODO: 16/11/17 获取下一页链接  
-
+            //获取下一页链接
+            page.addTargetRequests(html.xpath("//a[@class=\"next\"]").all());
         }else{                                                              //详情页
-            // TODO: 16/11/17 解析详情页 
+            // TODO: 16/11/17 解析详情页
             logger.info(url);
         }
 
