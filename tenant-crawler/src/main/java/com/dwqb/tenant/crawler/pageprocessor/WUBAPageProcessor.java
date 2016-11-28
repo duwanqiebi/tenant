@@ -16,6 +16,7 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
     private static Logger logger = LoggerFactory.getLogger("WUBAPageProcessor");
 
     public void process(Page page) {
+        //System.out.println(getSite().getHttpProxyPool().getProxy().getAddress().toString());
         String url = page.getUrl().toString();
 
         Html html;
@@ -31,7 +32,24 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
             page.addTargetRequests(html.xpath("//a[@class=\"next\"]").all());
         }else{                                                              //详情页
             // TODO: 16/11/17 解析详情页
-            logger.info(url);
+            //logger.info(url);
+            html = page.getHtml();
+            Selectable main = html.xpath("body/div[@class=\"main-wrap\"]");
+            /* 房源题目 */
+            Selectable houseTitle = main.xpath("div[@class=\"house-title\"]");
+            String title = houseTitle.xpath("h1/text()").toString();
+            System.out.println("title = " + title);
+            String info = houseTitle.xpath("p/text()").toString();
+            int index = info.indexOf("更新");
+            String updateTime = info.substring(index - 19,index);
+            System.out.println("info = " + info);
+            System.out.println("updateTime = " + updateTime);
+
+            /* 房源基本信息 */
+            Selectable basicInfo = main.xpath("div[@class=\"house-basic-info\"]");
+            String price = basicInfo.xpath("div[@class=\"house-basic-right fr\"]/div[@class=\"house-basic-desc\"]/div[@class=\"house-desc-item fl c_333\"]/div[@class=\"house-pay-way f16\"]/sapn[@class=\"c_ff552e\"]/b/text()").toString();
+            System.out.println("price = " + price);
+
         }
 
 
