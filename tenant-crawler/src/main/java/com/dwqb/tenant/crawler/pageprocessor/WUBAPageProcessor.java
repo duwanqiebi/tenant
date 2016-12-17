@@ -29,21 +29,25 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
             page.addTargetRequests(list);
 
             //获取下一页链接
-            page.addTargetRequests(html.xpath("//a[@class=\"next\"]").all());
-        }else{                                                              //详情页
+            page.addTargetRequests(html.xpath("//*[@id=\"bottom_ad_li\"]/div[2]/a[@class=\"next\"]").all());
+        }else if(url.matches("")){
+
+        }
+
+        else{                                                              //详情页
             // TODO: 16/11/17 解析详情页
             //logger.info(url);
             html = page.getHtml();
             Selectable main = html.xpath("body/div[@class=\"main-wrap\"]");
             /* 房源题目 */
-            Selectable houseTitle = main.xpath("div[@class=\"house-title\"]");
-            String title = houseTitle.xpath("h1/text()").toString();
-            System.out.println("title = " + title);
-            String info = houseTitle.xpath("p/text()").toString();
-            int index = info.indexOf("更新");
-            String updateTime = info.substring(index - 19,index);
-            System.out.println("info = " + info);
-            System.out.println("updateTime = " + updateTime);
+            //Selectable houseTitle = main.select("div[@class=\"house-title\"]/h1/");
+            //String title = houseTitle.xpath("h1/text()").toString();
+            //System.out.println("title = " + title);
+            //String info = houseTitle.xpath("p/text()").toString();
+            //int index = info.indexOf("更新");
+            //String updateTime = info.substring(index - 19,index);
+            //System.out.println("info = " + info);
+            //System.out.println("updateTime = " + updateTime);
 
             /* 房源基本信息 */
             Selectable basicInfo = main.xpath("div[@class=\"house-basic-info\"]");
