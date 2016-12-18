@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class WUBAPageProcessor extends AbstractPageProcessor{
 
-    private static Logger logger = LoggerFactory.getLogger("WUBAPageProcessor");
+    private static Logger logger = LoggerFactory.getLogger(WUBAPageProcessor.class);
 
     public void process(Page page) {
         //System.out.println(getSite().getHttpProxyPool().getProxy().getAddress().toString());
