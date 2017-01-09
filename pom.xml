@@ -13,6 +13,7 @@
         <module>tenant-core</module>
         <module>tenant-crawler</module>
         <module>tenant-schedulejob</module>
+        <module>tenant-web</module>
     </modules>
 
     <dependencies>
