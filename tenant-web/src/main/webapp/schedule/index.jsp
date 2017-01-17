@@ -9,7 +9,7 @@
 <html>
 <head>
     <title>
-        Schedule调度管理
+        爬虫调度管理
     </title>
     <STYLE type=text/css>
 
@@ -20,7 +20,7 @@
 
 </head>
 <body style="font-size:12px;">
-<h1 align="center">TaobaoSchedule调度管理控制台</h1>
+<h1 align="center">爬虫调度管理控制台</h1>
 <a id="strategyList" onclick="linkOnclick(this);"  target="content" href="scheduleStrategyList.jsp?manager=<%=isManager%>" style="color:#0000CD">调度策略</a>
 <a id="taskTypeList" onclick="linkOnclick(this);" target="content" href="taskTypeList.jsp?manager=<%=isManager%>" style="color:#0000CD">任务管理</a>
 <a id="managerFactoryList" onclick="linkOnclick(this);"  target="content" href="managerFactoryList.jsp?manager=<%=isManager%>" style="color:#0000CD">机器管理</a>
