@@ -1,5 +1,6 @@
 package com.dwqb.tenant.crawler.pageprocessor;
 
+import com.dwqb.tenant.core.model.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
@@ -31,7 +32,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String priceType = html.css(".price .gray-6").get();    //付款方式
 
             String isShare = html.css(".icons").get();      //整租
-            String status;
+            String status = null;
             if(isShare.equals("整")){
                 for (String item : html.css(".current .tags").all()){
                     if ("当前房源".equals(item)){
@@ -52,7 +53,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String floor = detailRooms.get(3).css("li","text").get();     //楼层
             floor = floor.substring(4,floor.length() - 1);
 
-            // TODO: 16/12/18 model类 
+            Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor);
         }
 
 

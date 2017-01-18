@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd">
 
 
     <!-- jedis 读连接池配置-->
@@ -14,13 +14,25 @@
         <property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}"/>
         <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
     </bean>
-    
+
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="poolConfig" ref="jedisPoolConfig_r"/>
         <constructor-arg name="host" value="${redis.host}"/>
-        <constructor-arg name="password" value="${redis.password}" />
-        <constructor-arg name="port" value="${redis.port}" />
-        <constructor-arg name="timeout" value="${redis.timeout}" />
+        <constructor-arg name="password" value="${redis.password}"/>
+        <constructor-arg name="port" value="${redis.port}"/>
+        <constructor-arg name="timeout" value="${redis.timeout}"/>
+    </bean>
+
+
+    <!-- HBase -->
+    <hdp:configuration id="hadoopConfiguration">
+        fs.defaultFS=hdfs://localhost:8020
+    </hdp:configuration>
+
+    <hdp:hbase-configuration configuration-ref="hadoopConfiguration" zk-quorum="${hbase.zk.host}" zk-port="${hbase.zk.port}"/>
+
+    <bean id="hbaseTemplate" class="org.springframework.data.hadoop.hbase.HbaseTemplate">
+        <property name="configuration" ref="hadoopConfiguration"/>
     </bean>
 
 </beans>
