@@ -32,13 +32,13 @@
 <a id="config" onclick="linkOnclick(this);"  target="content" href="config.jsp" style="color:#0000CD">Zookeeper连接配置</a>
 <a id="zookeeperData" onclick="linkOnclick(this);"  target="content" href="zookeeperData.jsp" style="color:#0000CD">Zookeeper数据</a>
 <a id="zookeeperDataExport" onclick="linkOnclick(this);"  target="content" href="exportConfig.jsp" style="color:#0000CD">Export配置数据</a>
-<a id="zookeeperDataImport" onclick="linkOnclick(this);"  target="content" href="importConfig.jsp" style="color:#0000CD">Import配置数据</a>
+<a id="zookeeperDataImport" onclick="linkOnclick(this);"  target="conten
+t" href="importConfig.jsp" style="color:#0000CD">Import配置数据</a>
 <%
     }
 %>
-&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp请参考：<a href="http://code.taobao.org/p/tbschedule/wiki/index/">tbschedule开源项目</a>
-&nbsp&nbsp<font style="color:red;font-size:15">[建议使用IE8]</font>
-<iframe  name="content" FRAMEBORDER="0"  height="85%" width="100%" src="scheduleStrategyList.jsp?manager=<%=isManager%>"></iframe>
+
+<iframe  name="content" FRAMEBORDER="0"  height="85%" width="100%" src="scherduleStrategyList.jsp?manager=<%=isManager%>"></iframe>
 </body>
 </html>
 
