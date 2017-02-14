@@ -1,6 +1,8 @@
 package com.dwqb.tenant.crawler.pageprocessor;
 
+import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Room;
+import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
@@ -27,6 +29,12 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
         }else{                                  //详情页
             String roomName = html.css(".room_name > h2","text").get();
             String price = html.css(".room_price","text").get();
+            if(price.length() > 0){
+                char start = price.charAt(0);
+                if(start < 'a' || start > 'Z'){
+                    price = price.substring(1);
+                }
+            }
             String longitude = html.css("#mapsearchText","data-lng").get();     //经度
             String latitude = html.css("#mapsearchText","data-lat").get();       //韦度
             String priceType = html.css(".price .gray-6").get();    //付款方式
@@ -54,6 +62,11 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             floor = floor.substring(4,floor.length() - 1);
 
             Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor);
+
+            //es
+            String json = JsonUtils2.obj2Json(room);
+            System.out.println(json);
+            ESUtils.curl("http://localhost:9200/room/room/1","PUT", JsonUtils2.obj2Json(room));
         }
 
 

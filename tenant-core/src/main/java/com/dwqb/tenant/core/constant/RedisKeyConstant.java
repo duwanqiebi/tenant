@@ -1,6 +1,5 @@
 package com.dwqb.tenant.core.constant;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Created by zhangqiang on 16/11/18.

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+
+    <!-- 应用信息配置，也可以用dubbo.properties配置 -->
+    <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aapplication%2F%3E -->
+    <dubbo:application name="atp-provider" owner="lsh-atp" organization="lsh"/>
+
+    <!-- 注册中心配置 -->
+    <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aregistry%2F%3E -->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <!-- 监控中心配置 -->
+    <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Amonitor%2F%3E -->
+    <dubbo:monitor protocol="registry"/>
+
+    <dubbo:protocol host="127.0.0.1" name="dubbo" port="20880" />
+
+    <!-- 服务提供者缺省值配置  -->
+    <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aprovider%2F%3E -->
+    <dubbo:provider threads="500"  accepts="1500" payload="104857600" timeout="10000" delay="-1" retries="0"/>
+
+    <!-- 服务提供者协议配置 -->
+    <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aprotocol%2F%3E -->
+    <dubbo:protocol name="dubbo" serialization="kryo"/>
+    <dubbo:protocol name="rest"  port="8888" contextpath="api/atp/java/v1" server="tomcat"
+                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter" />
+
+    <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
+    <dubbo:annotation package="com.dwqb.tenant.provider.service"/>
+    <!--<dubbo:registry id="atpMisService" address="zookeeper://${zookeeper.ip}" check="false" />-->
+    <!--<dubbo:reference registry="atpMisService" id="currentDcRPCService" interface="com.lsh.atp.api.service.mis.ICurrentDcRPCService" check="false" />-->
+
+</beans>

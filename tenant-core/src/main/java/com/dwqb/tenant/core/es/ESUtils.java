@@ -1,7 +1,5 @@
 package com.dwqb.tenant.core.es;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
@@ -9,6 +7,8 @@ import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class ESUtils {
     private static final Logger log = LoggerFactory.getLogger(ESUtils.class);
 
     private static String EMPTY_STRING = "";
-    private static final HttpClient HTTP_CLIENT = null;
+    private static final HttpClient HTTP_CLIENT = HttpClients.createDefault();
 
     public static String curl(String sUrl, String method, String data) {
 
@@ -61,12 +63,12 @@ public class ESUtils {
             localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
             HttpResponse httpResponse = HTTP_CLIENT.execute(base, localContext);
 
-            Map<String, List<String>> headerFields = Maps.newHashMap();
+            Map<String, List<String>> headerFields = new HashMap<>();
 
             Header[] headers = httpResponse.getAllHeaders();
 
             for (Header header : headers) {
-                List<String> headerList = Lists.newArrayList();
+                List<String> headerList = new ArrayList<>();
 
                 HeaderElement[] headerElements = header.getElements();
                 for (HeaderElement headerElement : headerElements) {
