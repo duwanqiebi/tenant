@@ -38,19 +38,23 @@ app.controller('EmptyController', function($rootScope, $scope, $location) {
 app.controller('SearchController', function($rootScope, $scope, $location, $routeParams, House) {
 
     if($routeParams.query < 2 | $routeParams > 50) {
+        console.log("1");
         $location.path('/home');
         return;
     }
 
     House.search($routeParams.query, $routeParams.page_num, function(data) {
-        if(!data.page_count)
-            $location.path('empty');
-        $scope.query = data.query;
-        $scope.page_count = data.page_count;
+        console.log("search")
+        console.log("search111111")
+        // console.log(data)
+        // if(!data.page_count)
+        //     $location.path('empty');
+        // $scope.query = data.query;
+        // $scope.page_count = data.page_count;
         $scope.page_num = data.page_num;
-        $scope.page_next = data.page_next;
-        $scope.page_prev = data.page_prev;
-        $scope.houses = data.result;
+        // $scope.page_next = data.page_next;
+        // $scope.page_prev = data.page_prev;
+        $scope.houses = data.houses;
     });
 
     $rootScope.is_homepage = function() {

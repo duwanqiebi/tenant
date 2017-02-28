@@ -31,7 +31,8 @@
     <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aprotocol%2F%3E -->
     <dubbo:protocol name="dubbo" serialization="kryo"/>
     <dubbo:protocol name="rest"  port="8888" contextpath="api/atp/java/v1" server="tomcat"
-                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter" />
+                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter,
+                    com.dwqb.tenant.provider.filter.ResponseFilter" />
 
     <!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
     <dubbo:annotation package="com.dwqb.tenant.provider.service"/>

@@ -65,7 +65,6 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            System.out.println(json);
             ESUtils.curl("http://localhost:9200/room/room/1","PUT", JsonUtils2.obj2Json(room));
         }
 
