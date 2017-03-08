@@ -44,17 +44,23 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     }
 
     House.search($routeParams.query, $routeParams.page_num, function(data) {
-        console.log("search")
-        console.log("search111111")
-        // console.log(data)
+        console.log("search");
+        console.log("search111111");
+        console.log(111);
+        console.log(data);
+        console.log(1);
         // if(!data.page_count)
         //     $location.path('empty');
         // $scope.query = data.query;
         // $scope.page_count = data.page_count;
-        $scope.page_num = data.page_num;
+        $scope.page_count = 20;
+        // $scope.page_num = data.page_num;
         // $scope.page_next = data.page_next;
         // $scope.page_prev = data.page_prev;
+        $scope.page_next = data.page_num + 1;
+        $scope.page_prev = data.page_num - 1;
         $scope.houses = data.houses;
+        console.log(data.houses);
     });
 
     $rootScope.is_homepage = function() {

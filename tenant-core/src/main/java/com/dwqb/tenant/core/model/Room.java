@@ -27,6 +27,8 @@ public class Room implements Serializable{
 
     private String floor;
 
+    public Room() {
+    }
 
     public Room(String name, Double price, Double longitude, Double latitude, String priceType, String status, Double space, String dirction, String struct, String floor) {
         this.name = name;

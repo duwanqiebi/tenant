@@ -31,7 +31,7 @@
             <hr style="margin: 0px;">
             <div class="panel-body">
                 <p ng-if="house.dizhi.length"><span class="glyphi  glyphicon-map-marker"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+dizhi) | escape}}" target="_blank" ng-repeat="dizhi in house.dizhi">{{dizhi}} </a></p>
-                <p ng-if="house.ditie.length"><span class="glyphicon glyphicon-road"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+ditie) | escape}}" target="_blank" ng-repeat="ditie in house.ditie">{{ditie}} </a></p>
+                <p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{ditie}}</p>
                 <p ng-if="house.jushi"><span class="glyphicon glyphicon-home"></span> {{house.jushi}}</p>
                 <p ng-if="house.shouji"><span class="glyphicon glyphicon-earphone"></span> {{house.shouji}}</p>
                 <p ng-if="house.zujin"><span class="glyphicon glyphicon-usd"></span> {{house.zujin}}</p>
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <!--
+
     <div class="btn-group btn-group-justified">
         <div class="btn-group">
             <a ng-disabled="page_prev==-1" href="#/search/{{query}}/{{page_prev}}" type="button" class="btn btn-default">上一页</a>
@@ -50,5 +50,5 @@
             <a ng-disabled="page_next==-1" href="#/search/{{query}}/{{page_next}}" type="button" class="btn btn-default">下一页</a>
         </div>
     </div>
-    -->
+
 </div>

@@ -14,9 +14,12 @@ public class TenantMsgResponse implements Serializable{
 
     Integer total;
 
-    public TenantMsgResponse(List<Room> houses, Integer total) {
+    Integer pageNum;
+
+    public TenantMsgResponse(List<Room> houses, Integer total, Integer pageNum) {
         this.houses = houses;
         this.total = total;
+        this.pageNum = pageNum;
     }
 
     public List<Room> getHouses() {

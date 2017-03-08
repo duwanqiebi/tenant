@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ObjUtils {
@@ -15,6 +16,25 @@ public class ObjUtils {
 
     public static <T> T ifNull(T object, T defaultValue) {
         return object != null ? object : defaultValue;
+    }
+
+
+    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) throws Exception {
+        if (map == null)
+            return null;
+
+        Object obj = beanClass.newInstance();
+
+        org.apache.commons.beanutils.BeanUtils.populate(obj, map);
+
+        return obj;
+    }
+
+    public static Map<?, ?> objectToMap(Object obj) {
+        if(obj == null)
+            return null;
+
+        return new org.apache.commons.beanutils.BeanMap(obj);
     }
 
     public static String toString(Object obj) {
