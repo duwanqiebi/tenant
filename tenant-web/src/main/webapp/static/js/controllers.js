@@ -44,11 +44,6 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     }
 
     House.search($routeParams.query, $routeParams.page_num, function(data) {
-        console.log("search");
-        console.log("search111111");
-        console.log(111);
-        console.log(data);
-        console.log(1);
         // if(!data.page_count)
         //     $location.path('empty');
         // $scope.query = data.query;

@@ -31,10 +31,11 @@
             <hr style="margin: 0px;">
             <div class="panel-body">
                 <p ng-if="house.dizhi.length"><span class="glyphi  glyphicon-map-marker"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+dizhi) | escape}}" target="_blank" ng-repeat="dizhi in house.dizhi">{{dizhi}} </a></p>
-                <p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{ditie}}</p>
-                <p ng-if="house.jushi"><span class="glyphicon glyphicon-home"></span> {{house.jushi}}</p>
+                <p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{house.name}}</p>
+                <p ng-if="house.space"><span class="glyphicon glyphicon-road"></span>{{house.space}}</p>
+                <p ng-if="house.price"><span class="glyphicon glyphicon-usd"></span> {{house.price}}</p>
+                <p ng-if="house.struct"><span class="glyphicon glyphicon-home"></span> {{house.struct}}</p>
                 <p ng-if="house.shouji"><span class="glyphicon glyphicon-earphone"></span> {{house.shouji}}</p>
-                <p ng-if="house.zujin"><span class="glyphicon glyphicon-usd"></span> {{house.zujin}}</p>
                 <p ng-if="house.links.length"><span class="glyphicon glyphicon-link"></span> <a target="_blank" href="{{link}}" ng-repeat="link in house.links">{{link}}</a></p>
                 <!--<p ng-if="house.images.length"><span class="glyphicon glyphicon-picture"></span> <a data-fancybox-group="fancy-group-{{rowid}}" class="fancy-image" target="_blank" href="{{image.0}}" title="{{image.1}}" ng-repeat="image in house.images"><img ng-src="{{image.0}}" err-src="/static/img/default_image.png" style="height: 30px;"> </a></p>-->
                 <!--<p ng-if="house.confidence>-1"><span class="glyphicon glyphicon-star"></span> {{house.confidence}}</p>-->
