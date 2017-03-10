@@ -1,6 +1,7 @@
 package com.dwqb.tenant.core.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by zhangqiang on 16/12/18.
@@ -27,10 +28,12 @@ public class Room implements Serializable{
 
     private String floor;
 
+    private List<String> imgList;
+
     public Room() {
     }
 
-    public Room(String name, Double price, Double longitude, Double latitude, String priceType, String status, Double space, String dirction, String struct, String floor) {
+    public Room(String name, Double price, Double longitude, Double latitude, String priceType, String status, Double space, String dirction, String struct, String floor, List<String> imgList) {
         this.name = name;
         this.price = price;
         this.longitude = longitude;
@@ -41,6 +44,7 @@ public class Room implements Serializable{
         this.dirction = dirction;
         this.struct = struct;
         this.floor = floor;
+        this.imgList = imgList;
     }
 
     public String getName() {
@@ -121,5 +125,13 @@ public class Room implements Serializable{
 
     public void setFloor(String floor) {
         this.floor = floor;
+    }
+
+    public List<String> getImgList() {
+        return imgList;
+    }
+
+    public void setImgList(List<String> imgList) {
+        this.imgList = imgList;
     }
 }

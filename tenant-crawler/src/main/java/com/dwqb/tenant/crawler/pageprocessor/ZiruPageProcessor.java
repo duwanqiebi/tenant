@@ -10,7 +10,9 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by zhangqiang on 16/12/17.
@@ -61,7 +63,13 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String floor = detailRooms.get(3).css("li","text").get();     //楼层
             floor = floor.substring(4,floor.length() - 1);
 
-            Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor);
+
+            //图片地址
+            List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
+
+
+
+            Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);
@@ -72,6 +80,8 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
     }
 
     public static void main(String[] args) {
-        Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=3").thread(1).run();
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=3").thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
+        ziruSpider.run();
     }
 }
