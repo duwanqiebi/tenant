@@ -3,6 +3,9 @@ package com.dwqb.tenant.crawler.pageprocessor;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by zhangqiang on 16/11/16.
  */
@@ -18,5 +21,15 @@ public abstract class AbstractPageProcessor implements PageProcessor{
 
     public Site getSite() {
         return this.site;
+    }
+
+    protected List<String> removeDuplicate(List<String> list){
+        List<String> result = new ArrayList<>();
+        for(String str : list){
+            if(!result.contains(str)){
+                result.add(str);
+            }
+        }
+        return result;
     }
 }

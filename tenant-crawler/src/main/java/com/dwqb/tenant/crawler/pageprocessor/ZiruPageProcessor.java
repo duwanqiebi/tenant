@@ -69,7 +69,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             //图片地址
             List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
-
+            imgList = this.removeDuplicate(imgList);
 
 
             Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor,imgList);
