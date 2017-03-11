@@ -13,6 +13,7 @@ import us.codecraft.webmagic.selector.Selectable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by zhangqiang on 16/12/17.
@@ -20,6 +21,8 @@ import java.util.Random;
 public class ZiruPageProcessor extends AbstractPageProcessor{
 
     private static Logger logger = LoggerFactory.getLogger(ZiruPageProcessor.class);
+
+    AtomicInteger index = new AtomicInteger(1);
 
     public void process(Page page) {
         String curUrl = page.getUrl().toString();
@@ -73,7 +76,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/1","PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(index.getAndAdd(1)) ,"PUT", JsonUtils2.obj2Json(room));
         }
 
 
