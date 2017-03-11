@@ -1,6 +1,8 @@
 package com.dwqb.tenant.crawler.pageprocessor;
 
+import com.dwqb.tenant.core.baiduAPI.BaiduMapAPI;
 import com.dwqb.tenant.core.es.ESUtils;
+import com.dwqb.tenant.core.model.Region;
 import com.dwqb.tenant.core.model.Room;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
@@ -40,8 +42,10 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
                     price = price.substring(1);
                 }
             }
-            String longitude = html.css("#mapsearchText","data-lng").get();     //经度
-            String latitude = html.css("#mapsearchText","data-lat").get();       //韦度
+            Double longitude = Double.parseDouble(html.css("#mapsearchText","data-lng").get()) ;     //经度
+            Double latitude = Double.parseDouble(html.css("#mapsearchText","data-lat").get()) ;       //韦度
+            Region region = BaiduMapAPI.covertLocation(longitude,latitude);         //区域
+
             String priceType = html.css(".price .gray-6").get();    //付款方式
 
             String isShare = html.css(".icons").get();      //整租
@@ -72,7 +76,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             imgList = this.removeDuplicate(imgList);
 
 
-            Room room = new Room(roomName,Double.parseDouble(price),Double.parseDouble(longitude),Double.parseDouble(latitude),priceType,status,Double.parseDouble(space),dirction,struct,floor,imgList);
+            Room room = new Room(roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);

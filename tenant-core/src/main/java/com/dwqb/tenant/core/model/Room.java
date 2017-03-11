@@ -16,6 +16,8 @@ public class Room implements Serializable{
 
     private Double latitude;
 
+    private String region;
+
     private String priceType;
 
     private String status;  //是否可租
@@ -33,11 +35,12 @@ public class Room implements Serializable{
     public Room() {
     }
 
-    public Room(String name, Double price, Double longitude, Double latitude, String priceType, String status, Double space, String dirction, String struct, String floor, List<String> imgList) {
+    public Room(String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String floor, List<String> imgList) {
         this.name = name;
         this.price = price;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.region = region;
         this.priceType = priceType;
         this.status = status;
         this.space = space;
@@ -49,6 +52,14 @@ public class Room implements Serializable{
 
     public String getName() {
         return name;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public void setName(String name) {
