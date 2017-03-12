@@ -62,3 +62,7 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         return false;
     }
 });
+
+app.controller('EchartsController', function($rootPath, $scope, $location, $routeParams, House){
+    
+});

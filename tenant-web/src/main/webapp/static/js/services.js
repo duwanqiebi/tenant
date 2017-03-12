@@ -13,5 +13,10 @@ app.factory('House', function($http) {
             return $http.get(api).success(callback);
             
         },
+
+        echart : function(callback){
+            console.log("echart");
+            return $http.get(api).success(callback);
+        }
     };
 });

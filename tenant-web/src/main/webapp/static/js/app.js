@@ -30,7 +30,13 @@ app.config(['$routeProvider',function ($routeProvider) {
             })
         .when('/statistic',
             {
+
                 templateUrl: '/static/partials/statistic.html'
+            })
+        .when('/echart',
+            {
+                controller: 'EchartsController',
+                templateUrl: '/static/partials/echarts_distinct.html'
             })
         .otherwise(
             {
