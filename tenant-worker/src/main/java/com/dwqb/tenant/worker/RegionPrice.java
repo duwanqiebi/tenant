@@ -27,7 +27,7 @@ public class RegionPrice {
             for(Object obj : hitList){
                 Map curMap = (Map)obj;
                 Map source = (Map)curMap.get("_source");
-                BigDecimal price = new BigDecimal((String) source.get("price"));
+                BigDecimal price = new BigDecimal((Double)source.get("price"));
                 totalPrice.add(price);
             }
             return totalPrice.divide(new BigDecimal(total));
@@ -41,7 +41,7 @@ public class RegionPrice {
 
         Node<String>[] xAxis = new Node[1];
         xAxis[0] = new Node(null,new String[Region.values().length],"category");
-        int xAxisIndex = 0;
+
 
         Node<Double>[] series = new Node[RoomType.values().length];
 
@@ -50,6 +50,7 @@ public class RegionPrice {
 
             Node<Double> seriesNode = new Node<>(roomType.toString(), new Double[Region.values().length], "bar");
 
+            int xAxisIndex = 0;
             for(Region region : Region.values()){
                 xAxis[0].setData(region.toString(), xAxisIndex );
 
@@ -64,5 +65,6 @@ public class RegionPrice {
 
         BarOption option = new BarOption(legend,xAxis,series);
 
+        ESUtils.curl("http://localhost:9200/echart/regionPrice","POST",JsonUtils2.obj2Json(option));
     }
 }
