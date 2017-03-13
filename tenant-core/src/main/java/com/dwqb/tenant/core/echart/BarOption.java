@@ -12,12 +12,12 @@ public class BarOption extends BaseOption{
 
     private Node<String>[] xAxis;
 
-    private Node<Integer>[] series;
+    private Node<Double>[] series;
 
     public BarOption() {
     }
 
-    public BarOption(Node<String> legend, Node<String>[] xAxis, Node<Integer>[] series) {
+    public BarOption(Node<String> legend, Node<String>[] xAxis, Node<Double>[] series) {
         this.legend = legend;
         this.xAxis = xAxis;
         this.series = series;
@@ -39,11 +39,11 @@ public class BarOption extends BaseOption{
         this.xAxis = xAxis;
     }
 
-    public Node<Integer>[] getSeries() {
+    public Node<Double>[] getSeries() {
         return series;
     }
 
-    public void setSeries(Node<Integer>[] series) {
+    public void setSeries(Node<Double>[] series) {
         this.series = series;
     }
 }

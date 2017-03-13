@@ -12,6 +12,8 @@ public class EsMatchModel {
 
     private String region;
 
+    private String roomType;
+
     public EsMatchModel(String title) {
         this.title = title;
     }
@@ -19,6 +21,12 @@ public class EsMatchModel {
     public EsMatchModel(String title, String region) {
         this.title = title;
         this.region = region;
+    }
+
+    public EsMatchModel(String title, String region, String roomType) {
+        this.title = title;
+        this.region = region;
+        this.roomType = roomType;
     }
 
     public String getTitle() {
@@ -35,5 +43,13 @@ public class EsMatchModel {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
     }
 }

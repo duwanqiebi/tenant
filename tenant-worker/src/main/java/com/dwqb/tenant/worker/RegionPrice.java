@@ -1,6 +1,8 @@
 package com.dwqb.tenant.worker;
 
 
+import com.dwqb.tenant.core.echart.BarOption;
+import com.dwqb.tenant.core.echart.Node;
 import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.*;
 import com.dwqb.tenant.core.utils.JsonUtils2;
@@ -10,9 +12,9 @@ import java.util.Map;
 
 public class RegionPrice {
 
-    public static BigDecimal getRegionPrice(Region region){
+    public static BigDecimal getRegionPrice(Region region, RoomType roomType){
         String uri = "http://localhost:9200/room/room/_search";
-        EsModel esModel = new EsModel(new EsQueryModel(new EsMatchModel(null,region.toString())));
+        EsModel esModel = new EsModel(new EsQueryModel(new EsMatchModel(null,region.toString(),roomType.toString())));
         String result = ESUtils.curl(uri,"GET", JsonUtils2.obj2Json(esModel));
         Map map = JsonUtils2.json2Obj(result, Map.class);
         Map hits = (Map) map.get("hits");
@@ -33,11 +35,34 @@ public class RegionPrice {
     }
 
     public static void main(String[] args){
-        for(Region region : Region.values()){
-            BigDecimal avgPrice = RegionPrice.getRegionPrice(region);
 
+        Node<String> legend = new Node<>(null,new String[RoomType.values().length],null);
+        int legendIndex = 0;
+
+        Node<String>[] xAxis = new Node[1];
+        xAxis[0] = new Node(null,new String[Region.values().length],"category");
+        int xAxisIndex = 0;
+
+        Node<Double>[] series = new Node[RoomType.values().length];
+
+        for(RoomType roomType : RoomType.values()){
+            legend.setData(roomType.toString(),legendIndex);
+
+            Node<Double> seriesNode = new Node<>(roomType.toString(), new Double[Region.values().length], "bar");
+
+            for(Region region : Region.values()){
+                xAxis[0].setData(region.toString(), xAxisIndex );
+
+                BigDecimal avgPrice = RegionPrice.getRegionPrice(region, roomType);
+                seriesNode.setData(avgPrice.doubleValue(), xAxisIndex);
+                xAxisIndex ++;
+            }
+
+            series[legendIndex] = seriesNode;
+            legendIndex ++;
         }
 
+        BarOption option = new BarOption(legend,xAxis,series);
 
     }
 }

@@ -46,4 +46,8 @@ public class Node<T> {
     public void setData(T[] data) {
         this.data = data;
     }
+
+    public void setData(T data, int index){
+        this.data[index] = data;
+    }
 }
