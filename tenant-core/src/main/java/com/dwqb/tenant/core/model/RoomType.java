@@ -1,5 +1,8 @@
 package com.dwqb.tenant.core.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by zhangqiang on 17/3/12.
  */
@@ -15,6 +18,13 @@ public enum RoomType {
 
     private String roomType;
 
+    private static Map<String, RoomType> map = new HashMap<String, RoomType>();
+    static {
+        for (RoomType type : RoomType.values()) {
+            map.put(type.getRoomType(), type);
+        }
+    }
+
     RoomType(String roomType) {
         this.roomType = roomType;
     }
@@ -25,5 +35,14 @@ public enum RoomType {
 
     public void setRoomType(String roomType) {
         this.roomType = roomType;
+    }
+
+    public static RoomType parseRoomType(String type){
+        return map.get(type);
+    }
+
+    @Override
+    public String toString() {
+        return roomType;
     }
 }

@@ -28,6 +28,8 @@ public class Room implements Serializable{
 
     private String struct;
 
+    private String roomType;
+
     private String floor;
 
     private List<String> imgList;
@@ -35,7 +37,7 @@ public class Room implements Serializable{
     public Room() {
     }
 
-    public Room(String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String floor, List<String> imgList) {
+    public Room(String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
         this.name = name;
         this.price = price;
         this.longitude = longitude;
@@ -46,8 +48,17 @@ public class Room implements Serializable{
         this.space = space;
         this.dirction = dirction;
         this.struct = struct;
+        this.roomType = roomType;
         this.floor = floor;
         this.imgList = imgList;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
     }
 
     public String getName() {

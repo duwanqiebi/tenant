@@ -4,6 +4,7 @@ import com.dwqb.tenant.core.baiduAPI.BaiduMapAPI;
 import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Region;
 import com.dwqb.tenant.core.model.Room;
+import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,15 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             space = space.substring(4,space.length() - 1);
             String dirction = detailRooms.get(1).css("li","text").get().substring(4);   //朝向
             String struct = detailRooms.get(2).css("li","text").get().substring(4); //结构
+
+            String tempType = detailRooms.get(2).css("span","text").get();
+            RoomType roomType = null;
+            if("整".equals(tempType)){
+                roomType = RoomType.parseRoomType(struct);
+            }else{
+                roomType = RoomType.WO_SHI;
+            }
+
             String floor = detailRooms.get(3).css("li","text").get();     //楼层
             floor = floor.substring(4,floor.length() - 1);
 
@@ -75,8 +85,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
             imgList = this.removeDuplicate(imgList);
 
-
-            Room room = new Room(roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,floor,imgList);
+            Room room = new Room(roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);
