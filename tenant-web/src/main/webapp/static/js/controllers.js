@@ -63,6 +63,36 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     }
 });
 
-app.controller('EchartsController', function($rootPath, $scope, $location, $routeParams, House){
-    
+app.controller('EchartsController', function(House){
+    House.echart(function(data){
+        var myChart = echarts.init(document.getElementById('main'));
+        var option =
+        {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                data: []
+            },
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+            ]
+        };
+        myChart.setOption(option);
+        myChart.setOption(data);
+       console.log("callback");
+    });
 });

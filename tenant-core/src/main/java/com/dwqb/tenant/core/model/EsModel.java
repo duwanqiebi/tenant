@@ -1,8 +1,11 @@
-package com.dwqb.tenant.provider.model;
+package com.dwqb.tenant.core.model;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Created by zhangqiang on 17/3/1.
  */
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class EsModel {
 
     private EsQueryModel query;
@@ -10,6 +13,10 @@ public class EsModel {
     private Integer from;
 
     private Integer size;
+
+    public EsModel(EsQueryModel query) {
+        this.query = query;
+    }
 
     public EsModel(EsQueryModel query, Integer from, Integer size) {
         this.query = query;

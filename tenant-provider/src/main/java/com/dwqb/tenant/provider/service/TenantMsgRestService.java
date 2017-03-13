@@ -8,11 +8,9 @@ import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Room;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import com.dwqb.tenant.core.utils.ObjUtils;
-import com.dwqb.tenant.provider.model.EsMatchModel;
-import com.dwqb.tenant.provider.model.EsModel;
-import com.dwqb.tenant.provider.model.EsQueryModel;
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import org.springframework.beans.BeanUtils;
+import com.dwqb.tenant.core.model.EsMatchModel;
+import com.dwqb.tenant.core.model.EsModel;
+import com.dwqb.tenant.core.model.EsQueryModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

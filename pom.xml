@@ -17,6 +17,7 @@
         <module>tenant-provider</module>
         <module>tenant-api</module>
         <module>tenant-analyzer</module>
+        <module>tenant-worker</module>
     </modules>
 
     <properties>

@@ -1,8 +1,9 @@
-package com.dwqb.tenant.provider.model;
+package com.dwqb.tenant.core.model;
 
-/**
- * Created by zhangqiang on 17/3/1.
- */
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class EsQueryModel{
 
     private EsMatchModel match;
