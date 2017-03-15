@@ -5,27 +5,24 @@ import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Region;
 import com.dwqb.tenant.core.model.Room;
 import com.dwqb.tenant.core.model.RoomType;
+import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by zhangqiang on 16/12/17.
- */
 public class ZiruPageProcessor extends AbstractPageProcessor{
 
     private static Logger logger = LoggerFactory.getLogger(ZiruPageProcessor.class);
 
-    AtomicInteger index = new AtomicInteger(1);
+    @Autowired
+    private IdGenerator idGenerator;
 
     public void process(Page page) {
         String curUrl = page.getUrl().toString();
@@ -89,7 +86,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(index.getAndAdd(1)) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(idGenerator.getId()) ,"PUT", JsonUtils2.obj2Json(room));
         }
 
 
