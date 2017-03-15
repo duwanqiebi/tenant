@@ -38,7 +38,7 @@ public enum RoomType {
     }
 
     public static RoomType parseRoomType(String type){
-        return map.get(type);
+        return map.get(type.trim());
     }
 
     @Override

@@ -65,6 +65,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String struct = detailRooms.get(2).css("li","text").get().substring(4); //结构
 
             String tempType = detailRooms.get(2).css("span","text").get();
+            System.out.println(tempType);
             RoomType roomType = null;
             if("整".equals(tempType)){
                 roomType = RoomType.parseRoomType(struct);
