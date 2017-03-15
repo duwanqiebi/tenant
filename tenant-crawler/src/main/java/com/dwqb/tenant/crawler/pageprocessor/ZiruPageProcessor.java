@@ -9,7 +9,7 @@ import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
@@ -17,12 +17,10 @@ import us.codecraft.webmagic.selector.Selectable;
 import java.util.List;
 import java.util.Random;
 
+@Component("ziru")
 public class ZiruPageProcessor extends AbstractPageProcessor{
 
     private static Logger logger = LoggerFactory.getLogger(ZiruPageProcessor.class);
-
-    @Autowired
-    private IdGenerator idGenerator;
 
     public void process(Page page) {
         String curUrl = page.getUrl().toString();
@@ -86,14 +84,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(idGenerator.getId()) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(IdGenerator.getId()) ,"PUT", JsonUtils2.obj2Json(room));
         }
 
 
     }
 
-    public static void main(String[] args) {
-        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=3").thread(1);
+    public static void main(String pageNum) {
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();
     }

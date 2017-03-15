@@ -14,7 +14,7 @@ public enum RoomType {
 
     SINGLE("一居室"),
 
-    TWO("两室一厅");
+    TWO("2室1厅");
 
     private String roomType;
 
