@@ -3,10 +3,10 @@ package com.dwqb.tenant.core.model;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by zhangqiang on 16/12/18.
- */
+
 public class Room implements Serializable{
+
+    private Long id;
 
     private String roomOrigin;
 
@@ -57,6 +57,33 @@ public class Room implements Serializable{
         this.roomType = roomType;
         this.floor = floor;
         this.imgList = imgList;
+    }
+
+    public Room(Long id, String roomOrigin, String url, String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
+        this.id = id;
+        this.roomOrigin = roomOrigin;
+        this.url = url;
+        this.name = name;
+        this.price = price;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.region = region;
+        this.priceType = priceType;
+        this.status = status;
+        this.space = space;
+        this.dirction = dirction;
+        this.struct = struct;
+        this.roomType = roomType;
+        this.floor = floor;
+        this.imgList = imgList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getRoomOrigin() {
