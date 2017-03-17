@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class Room implements Serializable{
 
+    private String roomOrigin;
+
+    private String url;
+
     private String name;
 
     private Double price;
@@ -37,7 +41,9 @@ public class Room implements Serializable{
     public Room() {
     }
 
-    public Room(String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
+    public Room(String roomOrigin, String url, String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
+        this.roomOrigin = roomOrigin;
+        this.url = url;
         this.name = name;
         this.price = price;
         this.longitude = longitude;
@@ -51,6 +57,22 @@ public class Room implements Serializable{
         this.roomType = roomType;
         this.floor = floor;
         this.imgList = imgList;
+    }
+
+    public String getRoomOrigin() {
+        return roomOrigin;
+    }
+
+    public void setRoomOrigin(String roomOrigin) {
+        this.roomOrigin = roomOrigin;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getRoomType() {

@@ -4,6 +4,7 @@ import com.dwqb.tenant.core.baiduAPI.BaiduMapAPI;
 import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Region;
 import com.dwqb.tenant.core.model.Room;
+import com.dwqb.tenant.core.model.RoomOrigin;
 import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
@@ -81,7 +82,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
             imgList = this.removeDuplicate(imgList);
 
-            Room room = new Room(roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
+            Room room = new Room(RoomOrigin.ZI_RU.toString(),curUrl,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);
