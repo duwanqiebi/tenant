@@ -37,33 +37,33 @@ public class RoomRepository {
     private byte[] roomType = Bytes.toBytes("roomType");
     private byte[] floor = Bytes.toBytes("floor");
 
-    public List<Room> findAll() {
-
-//        hbaseTemplate.
-
-
-        return hbaseTemplate.find(tableName, "cfInfo", new RowMapper<Room>() {
-
-            @Override
-            public Room mapRow(Result result, int rowNum) throws Exception {
-                return new Room(
-                        Bytes.toString(result.getValue(CF_INFO,name)),
-                        Bytes.toDouble(result.getValue(CF_INFO,price)),
-                        Bytes.toDouble(result.getValue(CF_INFO,longitude)),
-                        Bytes.toDouble(result.getValue(CF_INFO,latitude)),
-                        Bytes.toString(result.getValue(CF_INFO,region)),
-                        Bytes.toString(result.getValue(CF_INFO,priceType)),
-                        null,
-                        Bytes.toDouble(result.getValue(CF_INFO,space)),
-                        Bytes.toString(result.getValue(CF_INFO,dirction)),
-                        Bytes.toString(result.getValue(CF_INFO,struct)),
-                        Bytes.toString(result.getValue(CF_INFO,roomType)),
-                        Bytes.toString(result.getValue(CF_INFO,floor)),
-                        null
-                        );
-            }
-        });
-
-    }
+//    public List<Room> findAll() {
+//
+////        hbaseTemplate.
+//
+//
+//        return hbaseTemplate.find(tableName, "cfInfo", new RowMapper<Room>() {
+//
+//            @Override
+//            public Room mapRow(Result result, int rowNum) throws Exception {
+//                return new Room(
+//                        Bytes.toString(result.getValue(CF_INFO,name)),
+//                        Bytes.toDouble(result.getValue(CF_INFO,price)),
+//                        Bytes.toDouble(result.getValue(CF_INFO,longitude)),
+//                        Bytes.toDouble(result.getValue(CF_INFO,latitude)),
+//                        Bytes.toString(result.getValue(CF_INFO,region)),
+//                        Bytes.toString(result.getValue(CF_INFO,priceType)),
+//                        null,
+//                        Bytes.toDouble(result.getValue(CF_INFO,space)),
+//                        Bytes.toString(result.getValue(CF_INFO,dirction)),
+//                        Bytes.toString(result.getValue(CF_INFO,struct)),
+//                        Bytes.toString(result.getValue(CF_INFO,roomType)),
+//                        Bytes.toString(result.getValue(CF_INFO,floor)),
+//                        null
+//                        );
+//            }
+//        });
+//
+//    }
 
 }
