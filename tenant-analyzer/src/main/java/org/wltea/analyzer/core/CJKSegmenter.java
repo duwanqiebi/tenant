@@ -61,15 +61,18 @@ class CJKSegmenter implements ISegmenter {
 					hit = Dictionary.getSingleton().matchWithHit(context.getSegmentBuff(), context.getCursor() , hit);
 					if(hit.isMatch()){
 						//输出当前的词
+						System.out.println(hit.getMatchedDictSegment().getNodeChar());
 						Lexeme newLexeme = new Lexeme(context.getBufferOffset() , hit.getBegin() , context.getCursor() - hit.getBegin() + 1 , Lexeme.TYPE_CNWORD);
 						context.addLexeme(newLexeme);
 						
 						if(!hit.isPrefix()){//不是词前缀，hit不需要继续匹配，移除
+							System.out.println(hit.getMatchedDictSegment().getNodeChar() + "   不是词前缀，hit不需要继续匹配，移除");
 							this.tmpHits.remove(hit);
 						}
 						
 					}else if(hit.isUnmatch()){
 						//hit不是词，移除
+						System.out.println(hit.getMatchedDictSegment().getNodeChar() + "   不是词,移除");
 						this.tmpHits.remove(hit);
 					}					
 				}
@@ -79,12 +82,14 @@ class CJKSegmenter implements ISegmenter {
 			//再对当前指针位置的字符进行单字匹配
 			Hit singleCharHit = Dictionary.getSingleton().matchInMainDict(context.getSegmentBuff(), context.getCursor(), 1);
 			if(singleCharHit.isMatch()){//首字成词
+				System.out.println(singleCharHit.getMatchedDictSegment().getNodeChar() + "   首字成词");
 				//输出当前的词
 				Lexeme newLexeme = new Lexeme(context.getBufferOffset() , context.getCursor() , 1 , Lexeme.TYPE_CNWORD);
 				context.addLexeme(newLexeme);
 
 				//同时也是词前缀
 				if(singleCharHit.isPrefix()){
+					System.out.println(singleCharHit.getMatchedDictSegment().getNodeChar() + "   是前缀,加入hits");
 					//前缀匹配则放入hit列表
 					this.tmpHits.add(singleCharHit);
 				}
