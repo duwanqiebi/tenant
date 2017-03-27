@@ -18,7 +18,7 @@ public class SmsRestService implements ISmsRestService {
     @Path("sendMsg")
     public String sendMsg(@QueryParam("phone") String phone,
                           @QueryParam("msg") String msg) {
-        return "11111111111";
+        return "1111111111";
     }
 
 }

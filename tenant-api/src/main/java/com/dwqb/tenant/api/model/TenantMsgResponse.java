@@ -5,9 +5,7 @@ import com.dwqb.tenant.core.model.Room;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by zhangqiang on 17/3/2.
- */
+
 public class TenantMsgResponse implements Serializable{
 
     List<Room> houses;

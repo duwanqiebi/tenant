@@ -1,13 +1,13 @@
 package com.dwqb.tenant.core.hbase;
 
-import com.dwqb.tenant.core.model.Room;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.hadoop.hbase.HbaseTemplate;
-import org.springframework.data.hadoop.hbase.ResultsExtractor;
-import org.springframework.data.hadoop.hbase.RowMapper;
+//import com.dwqb.tenant.core.model.Room;
+//import org.apache.hadoop.hbase.client.Result;
+//import org.apache.hadoop.hbase.client.ResultScanner;
+//import org.apache.hadoop.hbase.util.Bytes;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.data.hadoop.hbase.HbaseTemplate;
+//import org.springframework.data.hadoop.hbase.ResultsExtractor;
+//import org.springframework.data.hadoop.hbase.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,24 +18,24 @@ import java.util.List;
 @Repository
 public class RoomRepository {
 
-    @Autowired
-    private HbaseTemplate hbaseTemplate;
-
-    public static byte[] CF_INFO = Bytes.toBytes("cfInfo");
-
-    private String tableName = "rooms";
-
-    private byte[] name = Bytes.toBytes("name");
-    private byte[] price = Bytes.toBytes("price");
-    private byte[] longitude = Bytes.toBytes("longitude");
-    private byte[] latitude = Bytes.toBytes("latitude");
-    private byte[] region = Bytes.toBytes("region");
-    private byte[] priceType = Bytes.toBytes("priceType");
-    private byte[] space = Bytes.toBytes("space");
-    private byte[] dirction = Bytes.toBytes("dirction");
-    private byte[] struct = Bytes.toBytes("struct");
-    private byte[] roomType = Bytes.toBytes("roomType");
-    private byte[] floor = Bytes.toBytes("floor");
+//    @Autowired
+//    private HbaseTemplate hbaseTemplate;
+//
+//    public static byte[] CF_INFO = Bytes.toBytes("cfInfo");
+//
+//    private String tableName = "rooms";
+//
+//    private byte[] name = Bytes.toBytes("name");
+//    private byte[] price = Bytes.toBytes("price");
+//    private byte[] longitude = Bytes.toBytes("longitude");
+//    private byte[] latitude = Bytes.toBytes("latitude");
+//    private byte[] region = Bytes.toBytes("region");
+//    private byte[] priceType = Bytes.toBytes("priceType");
+//    private byte[] space = Bytes.toBytes("space");
+//    private byte[] dirction = Bytes.toBytes("dirction");
+//    private byte[] struct = Bytes.toBytes("struct");
+//    private byte[] roomType = Bytes.toBytes("roomType");
+//    private byte[] floor = Bytes.toBytes("floor");
 
 //    public List<Room> findAll() {
 //
