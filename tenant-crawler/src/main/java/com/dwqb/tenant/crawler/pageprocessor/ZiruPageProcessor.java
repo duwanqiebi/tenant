@@ -10,6 +10,7 @@ import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
@@ -84,9 +85,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
             Room room = new Room(RoomOrigin.ZI_RU.toString(),curUrl,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
 
+            Long id = IdGenerator.getId();
+            room.setId(id);
+
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(IdGenerator.getId()) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+
+
         }
 
 

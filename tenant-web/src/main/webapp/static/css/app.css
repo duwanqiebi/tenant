@@ -20,3 +20,33 @@ body {
 .fancybox-nav span {
   visibility: visible;
 }
+
+
+/*58*/
+dl.secitem {
+  line-height: 18px;
+}
+.secitem_fist {
+  padding: 10px 20px;
+  background: #FAFAFA;
+  margin-top: 0;
+  border-bottom: solid 1px #F3F3F3;
+}
+.secitem .select, .search_nav span.select {
+  color: #FF552E;
+}.secitem dd a, .secitem dd span {
+   color: #333;
+   font-size: 12px;
+   margin-right: 17px;
+ }
+.secitem dt {
+  margin-right: 12px;
+}
+.secitem dt, .barct span {
+  color: #888;
+  width: 36px;
+  font-size: 12px;
+  height: 18px;
+  line-height: 18px;
+  float: left;
+}
