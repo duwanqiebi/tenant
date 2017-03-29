@@ -2,6 +2,8 @@
 
 var app = angular.module('uiApp', ['ngRoute']);
 
+
+
 app.config(['$routeProvider',function ($routeProvider) {
     $routeProvider
         .when('/home',
@@ -57,6 +59,18 @@ app.directive('errSrc', function() {
                     attrs.$set('src', attrs.errSrc);
                 }
             });
+        }
+    }
+});
+
+app.directive('repeatFinish',function(){
+    return {
+        link: function(scope,element,attr){
+            console.log(scope.$index);
+            if(scope.$last == true){
+                console.log('ng-repeat执行完毕');
+                scope.$eval( attr.repeatFinish )
+            }
         }
     }
 });

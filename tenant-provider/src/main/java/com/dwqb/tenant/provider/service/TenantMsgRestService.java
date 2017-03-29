@@ -30,7 +30,7 @@ public class TenantMsgRestService implements ITenantMsgService{
     @GET
     @Path("search/{queryStr}/{num}")
     public String search(@PathParam("queryStr") String queryStr,@PathParam("num") String pageNum) {
-            return "111";
+
         TenantMsgResponse response = null;
 
         String uri = "http://localhost:9200/room/room/_search";

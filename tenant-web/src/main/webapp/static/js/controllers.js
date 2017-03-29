@@ -1,5 +1,7 @@
 'use strict';
 
+var globledata ;
+
 app.controller('NavbarController', function($scope, $routeParams, $location) {
     if($routeParams.query < 2 | $routeParams > 50) {
         $location.path('/home');
@@ -44,6 +46,7 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     }
 
     House.search($routeParams.query, $routeParams.page_num, function(data) {
+        alert("search")
         // if(!data.page_count)
         //     $location.path('empty');
         // $scope.query = data.query;
@@ -55,7 +58,44 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         $scope.page_next = data.page_num + 1;
         $scope.page_prev = data.page_num - 1;
         $scope.houses = data.houses;
-        console.log(data.houses);
+
+
+        $scope.renderFinish = function(){
+            console.log('渲染完之后的操作');
+
+            console.log($scope.houses);
+
+
+            var arr = $("div[name='house_body']");
+            for(var i = 0; i <arr.length; i ++){
+                $("<div id='map" +i+ "' style='height:200px\;width:300px'>1111</div>").appendTo(arr[i]);
+            }
+
+
+
+            // console.log(document.getElementById("map1"));
+
+            // var map = new BMap.Map("map0");    // 创建Map实例
+            // map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
+            // map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+            // map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+            // map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+            
+            var index = 0;
+            for(;index < $scope.houses.length;index ++){
+                var house =  $scope.houses[index];
+                var map = new BMap.Map("map" + index);
+                console.log(house.latitude + " " + house.longitude);
+                var point = new BMap.Point(house.longitude, house.latitude);
+                var marker = new BMap.Marker(point);
+                map.addOverlay(marker);
+                map.centerAndZoom(point, 11);
+                map.addControl(new BMap.MapTypeControl());
+                map.enableScrollWheelZoom(true);
+            }
+        }
+
+
     });
 
     $rootScope.is_homepage = function() {
