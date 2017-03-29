@@ -16,6 +16,8 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -78,15 +80,39 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String floor = detailRooms.get(3).css("li","text").get();     //楼层
             floor = floor.substring(4,floor.length() - 1);
 
+            //地铁
+            List<String> subwayDescrption = new ArrayList<>();
+            if(detailRooms.size() > 4){
+                List<Selectable> subways = detailRooms.get(4).css("span").nodes();
+                int subwayindex = 0;
+                for(Selectable selectable : subways){
+                    if(subwayindex == 0){
+                        subwayDescrption.add(selectable.css("span","text").get());
+                    }else{
+                        List<Selectable> subwayOther = selectable.css("p").nodes();
+                        for(Selectable selectable1 : subwayOther){
+                            subwayDescrption.add(selectable1.css("p","text").get());
+                        }
+                    }
+                    subwayindex ++;
+                }
+            }
+
+            //管家
+            String contractName = html.css(".org.pr").css("p","text").get().split("：")[1];
+            String contractTel = html.css(".tel").css("div","text").get();
 
             //图片地址
             List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
             imgList = this.removeDuplicate(imgList);
 
-            Room room = new Room(RoomOrigin.ZI_RU.toString(),curUrl,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
 
             Long id = IdGenerator.getId();
-            room.setId(id);
+//            room.setId(id);
+
+            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
+
+
 
             //es
             String json = JsonUtils2.obj2Json(room);
@@ -100,6 +126,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
     public static void main(String pageNum) {
         Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(1);
+//        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E4%B8%AD%E5%85%B3%E6%9D%91").thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();
     }

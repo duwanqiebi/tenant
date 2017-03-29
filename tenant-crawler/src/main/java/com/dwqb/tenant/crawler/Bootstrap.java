@@ -17,7 +17,9 @@ public class Bootstrap {
 
 //        IdGenerator idGenerator = applicationContext.getBean("idGenerator",IdGenerator.class);
 //        System.out.println(idGenerator);
-        processor.main("1");
+        for(int i = 1 ; i <= 10; i ++){
+            processor.main(String.valueOf(1));
+        }
 //        System.out.println(IdGenerator.getId());
     }
 }

@@ -12,6 +12,12 @@ public class Room implements Serializable{
 
     private String url;
 
+    private String contractName;
+
+    private String contractTel;
+
+    private List<String> subway;
+
     private String name;
 
     private Double price;
@@ -41,9 +47,33 @@ public class Room implements Serializable{
     public Room() {
     }
 
+
+
     public Room(String roomOrigin, String url, String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
         this.roomOrigin = roomOrigin;
         this.url = url;
+        this.name = name;
+        this.price = price;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.region = region;
+        this.priceType = priceType;
+        this.status = status;
+        this.space = space;
+        this.dirction = dirction;
+        this.struct = struct;
+        this.roomType = roomType;
+        this.floor = floor;
+        this.imgList = imgList;
+    }
+
+    public Room(Long id, String roomOrigin, String url, String contractName, String contractTel, List<String> subway, String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
+        this.id = id;
+        this.roomOrigin = roomOrigin;
+        this.url = url;
+        this.contractName = contractName;
+        this.contractTel = contractTel;
+        this.subway = subway;
         this.name = name;
         this.price = price;
         this.longitude = longitude;
@@ -77,6 +107,8 @@ public class Room implements Serializable{
         this.floor = floor;
         this.imgList = imgList;
     }
+
+
 
     public Long getId() {
         return id;
@@ -204,5 +236,29 @@ public class Room implements Serializable{
 
     public void setImgList(List<String> imgList) {
         this.imgList = imgList;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
+    }
+
+    public String getContractTel() {
+        return contractTel;
+    }
+
+    public void setContractTel(String contractTel) {
+        this.contractTel = contractTel;
+    }
+
+    public List<String> getSubway() {
+        return subway;
+    }
+
+    public void setSubway(List<String> subway) {
+        this.subway = subway;
     }
 }
