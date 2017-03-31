@@ -2,6 +2,13 @@
 
 var globledata ;
 
+
+app.filter('to_trusted', ['$sce', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    }]);
+
 app.controller('NavbarController', function($scope, $routeParams, $location) {
     if($routeParams.query < 2 | $routeParams > 50) {
         $location.path('/home');
@@ -144,7 +151,7 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
         $scope.query = $routeParams.query;
         // $scope.page_count = data.page_count;
         $scope.page_count = 10;
-        $scope.page_num = $routeParams.page_num;
+        $scope.page_num = 1;
         // $scope.page_next = data.page_next;
         // $scope.page_prev = data.page_prev;
         $scope.page_next = $routeParams.page_num, + 1;

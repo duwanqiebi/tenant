@@ -50,3 +50,7 @@ dl.secitem {
   line-height: 18px;
   float: left;
 }
+
+.c_color{
+    color: red;
+}

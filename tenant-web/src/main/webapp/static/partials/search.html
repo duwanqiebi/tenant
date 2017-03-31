@@ -14,7 +14,8 @@
                     <div class="col-lg-12">
                         <a target="_blank" href="{{house.url}}">
                             <span class="glyphicon glyphicon-bookmark"></span>
-                            <strong>{{($index+1)+(page_num-1)*5}}. {{house.name}}</strong>
+                            <strong ng-bind-html-unsafe="house.name" ng-bind-html="house.name | to_trusted" style="font-size: larger">{{($index+1)+(page_num-1)*5}}.{{house.name}}
+                            </strong>
                         </a>
 
                         <!--<a>虚假房源举报</a>-->
@@ -41,10 +42,14 @@
             <div class="panel-body" name="house_body">
                 <p ng-if="house.dizhi.length"><span class="glyphi  glyphicon-map-marker"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+dizhi) | escape}}" target="_blank" ng-repeat="dizhi in house.dizhi">{{dizhi}} </a></p>
                 <!--<p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{house.name}}</p>-->
-                    <p ng-if="house.name">来源 : {{house.roomOrigin}}</p>
+                <p ng-if="house.name">来源 : {{house.roomOrigin}}</p>
                 <p ng-if="house.space">大小 : {{house.space}}</p>
                 <p ng-if="house.price">价格 : {{house.price}}</p>
                 <p ng-if="house.struct">结构 : {{house.struct}}</p>
+                <p ng-if="house.subway.length">
+                    <span>地铁 : </span>
+                    <span ng-repeat="subwaySingle in house.subway" ng-bind-html="subwaySingle | to_trusted" >{{subwaySingle}};</span>
+                </p>
                 <p ng-if="house.contractName">联系人 : {{house.contractName}}</p>
                 <p ng-if="house.contractTel">联系电话 :  {{house.contractTel}}</p>
                 <p ng-if="house.links.length"><span class="glyphicon glyphicon-link"></span> <a target="_blank" href="{{link}}" ng-repeat="link in house.links">{{link}}</a></p>

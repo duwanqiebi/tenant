@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('uiApp', ['ngRoute']);
+var app = angular.module('uiApp', ['ngRoute','ngSanitize']);
 
 var queryParam ;
 var pageNum;

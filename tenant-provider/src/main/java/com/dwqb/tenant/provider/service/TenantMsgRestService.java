@@ -9,6 +9,7 @@ import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.*;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import com.dwqb.tenant.core.utils.ObjUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,10 +89,40 @@ public class TenantMsgRestService implements ITenantMsgService{
             matchWrap.put("match",match);
             must.add(matchWrap);
         }
+        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr)){
+            Map match = new HashMap();
+            match.put("subway",queryStr);
+
+            Map matchWrap = new HashMap();
+            matchWrap.put("match",match);
+            must.add(matchWrap);
+        }
         bool.put("must",must);
         query.put("bool",bool);
 
+        //高亮
+        Map highlightWrap = new HashMap();
+        Map highlight = new HashMap();
+        List pre_tags = new ArrayList();
+        pre_tags.add("<em class=\"c_color\">");
+        Map pre_tagsWrap = new HashMap();
+        pre_tagsWrap.put("pre_tags",pre_tags);
+        List post_tags = new ArrayList();
+        post_tags.add("</em>");
+        Map post_tagsWrap = new HashMap();
+        post_tagsWrap.put("post_tags",post_tags);
+        Map fields = new HashMap();
+        fields.put("name",new HashMap<>());
+        fields.put("subway",new HashMap<>());
+        fields.put("region",new HashMap<>());
+        fields.put("description",new HashMap<>());
+
+        highlight.put("pre_tags",pre_tags);
+        highlight.put("post_tags",post_tags);
+        highlight.put("fields",fields);
+
         queryWrap.put("query",query);
+        queryWrap.put("highlight",highlight);
         queryWrap.put("size",size);
         queryWrap.put("from",size * (Integer.parseInt(pageNum) - 1));
 
@@ -118,6 +149,22 @@ public class TenantMsgRestService implements ITenantMsgService{
                 Room room = null;
                 try {
                     room = (Room) ObjUtils.mapToObject((Map)curMap.get("_source"),Room.class);
+
+                    //高亮字段解析
+                    Map highlightMap = (Map) curMap.get("highlight");
+
+                    List nameList = (List) highlightMap.get("name");
+                    if(!CollectionUtils.isEmpty(nameList)){
+                        room.setName(nameList.get(0).toString());
+                    }
+
+                    List subwayList = (List) highlightMap.get("subway");
+                    if(!CollectionUtils.isEmpty(nameList)){
+                        room.setSubway(subwayList);
+                    }
+
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
