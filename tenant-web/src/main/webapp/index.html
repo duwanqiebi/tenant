@@ -33,6 +33,115 @@
                 </form>
             </div>
         </div>
+
+
+
+
+        <div class="search_db">
+            <dl class="secitem secitem_fist">
+                <dd id="secitem-area">
+                    <a href="#/search/1" class="select" onclick="clickLog(this)">不限</a>
+                    <a href="#/search/2"  onclick="clickLog(this)">朝阳区</a>
+                    <a href="#/search/3" onclick="clickLog(this)">海淀区</a>
+                    <a href="#/search/4" onclick="clickLog(this)">东城区</a>
+                    <a href="#/search/5" onclick="clickLog(this)">西城区</a>
+                    <a href="#/search/6" onclick="clickLog(this)">崇文区</a>
+                    <a href="#/search/7" onclick="clickLog(this)">宣武区</a>
+                    <a href="#/search/8" onclick="clickLog(this)">丰台区</a>
+                    <a href="#/search/9" onclick="clickLog(this)">通州区</a>
+                    <a href="#/search/10" onclick="clickLog(this)">石景山区</a>
+                    <a href="#/search/11" onclick="clickLog(this)">房山区</a>
+                    <a href="#/search/12" onclick="clickLog(this)">昌平区</a>
+                    <a href="#/search/13" onclick="clickLog(this)">大兴区</a>
+                    <a href="#/search/14" onclick="clickLog(this)">顺义区</a>
+                    <a href="#/search/15" onclick="clickLog(this)">密云区</a>
+                    <a href="#/search/16" onclick="clickLog(this)">怀柔区</a>
+                    <a href="#/search/17" onclick="clickLog(this)">延庆区</a>
+                    <a href="#/search/18" onclick="clickLog(this)">平谷区</a>
+                    <a href="#/search/19" onclick="clickLog(this)">门头沟区</a>
+                </dd>
+            </dl>
+
+            <dl id="secitem-rent" class="secitem">
+                <dt class="fl">租金：</dt>
+                <dd>
+                    <a href="#/search/{{query}}/{{page_num}}/20" class="select" onclick="clickLog(this)">不限</a>
+                    <a href="#/search/{{query}}/{{page_num}}/21" onclick="clickLog(this)">600元以下</a>
+                    <a href="#/search/{{query}}/{{page_num}}/22" onclick="clickLog(this)">600-1000元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/23" onclick="clickLog(this)">1000-1500元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/24" onclick="clickLog(this)">1500-2000元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/25" onclick="clickLog(this)">2000-3000元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/26" onclick="clickLog(this)">3000-5000元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/27" onclick="clickLog(this)">5000-8000元</a>
+                    <a href="#/search/{{query}}/{{page_num}}/28" onclick="clickLog(this)">8000元以上</a>
+                </dd>
+            </dl>
+
+            <dl class="secitem">
+                <dt>厅室：</dt>
+                <dd id="secitem-room">
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/29" class="select" onclick="clickLog('from=fcpc_list_bj_Tingshi_')">不限</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/30" onclick="clickLog('from=fcpc_list_bj_Tingshi_j1')">一室</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/31" onclick="clickLog('from=fcpc_list_bj_Tingshi_j2')">两室</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/32" onclick="clickLog('from=fcpc_list_bj_Tingshi_j3')">三室</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/33" onclick="clickLog('from=fcpc_list_bj_Tingshi_j4')">四室</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/34" onclick="clickLog('from=fcpc_list_bj_Tingshi_j5')">四室以上</a>
+                </dd>
+            </dl>
+
+            <dl class="secitem">
+                <dt>方式：</dt>
+                <dd id="secitem-type">
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/35" class="select" onclick="clickLog(this)">不限</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/36"  onclick="clickLog(this)">整租</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/37" onclick="clickLog(this)">合租</a>
+                    <a rel="nofollow" href="#/search/{{query}}/{{page_num}}/38" onclick="clickLog(this)">床位</a>
+                </dd>
+            </dl>
+
+            <dl class="secitem">
+                <dt>品牌：</dt>
+                <dd id="secitem-brand">
+                    <a href="#/search/{{query}}/{{page_num}}/39" class="select" rel="nofollow" onclick="clickLog(this)">不限</a>
+                    <a href="#/search/{{query}}/{{page_num}}/40" rel="nofollow" onclick="clickLog(this)">58同城</a>
+                    <a href="#/search/{{query}}/{{page_num}}/41" rel="nofollow" onclick="clickLog(this)">自如</a>
+                    <a href="#/search/{{query}}/{{page_num}}/42" rel="nofollow" onclick="clickLog(this)">链家</a>
+                    <a href="#/search/{{query}}/{{page_num}}/43" rel="nofollow" onclick="clickLog(this)">安居客</a>
+                    <a href="#/search/{{query}}/{{page_num}}/44" rel="nofollow" onclick="clickLog(this)">我爱我家</a>
+                </dd>
+            </dl>
+
+
+            <dl class="secitem">
+                <dt>地铁：</dt>
+                <dd id="secitem-subway">
+                    <a href="#/search/{{query}}/{{page_num}}/45" class="select" rel="nofollow" onclick="clickLog(this)">不限</a>
+                    <a href="#/search/{{query}}/{{page_num}}/46" rel="nofollow" onclick="clickLog(this)">1号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/47" rel="nofollow" onclick="clickLog(this)">2号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/48" rel="nofollow" onclick="clickLog(this)">4号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/49" rel="nofollow" onclick="clickLog(this)">5号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/50" rel="nofollow" onclick="clickLog(this)">6号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/51" rel="nofollow" onclick="clickLog(this)">7号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/52" rel="nofollow" onclick="clickLog(this)">8号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/53" rel="nofollow" onclick="clickLog(this)">9号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/54" rel="nofollow" onclick="clickLog(this)">10号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/55" rel="nofollow" onclick="clickLog(this)">13号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/56" rel="nofollow" onclick="clickLog(this)">14号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/57" rel="nofollow" onclick="clickLog(this)">15号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/58" rel="nofollow" onclick="clickLog(this)">16号线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/59" rel="nofollow" onclick="clickLog(this)">八通线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/60" rel="nofollow" onclick="clickLog(this)">昌平线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/61" rel="nofollow" onclick="clickLog(this)">房山线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/62" rel="nofollow" onclick="clickLog(this)">亦庄线</a>
+                    <a href="#/search/{{query}}/{{page_num}}/63" rel="nofollow" onclick="clickLog(this)">机场线</a>
+                </dd>
+            </dl>
+        </div>
+
+
+
+
+
         <div class="container-fluid" ng-view></div>
         <div class="row footer text-center">
             &copy; zhaoxinwo.com 2015 | <a href="http://weibo.com/1704839092" target="_blank">@么什小洋</a> <a href="http://weibo.com/jiadebin1989" target="_blank">@Debin_IIE</a> | <a href="#/donate" style="color: red;"><img src="/static/img/alipay.png" style="max-height:20px;"></a>
@@ -77,7 +186,6 @@
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc"></script>
 
     <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc&services=&t=20170324173232"></script>
-
 
 </body>
 </html>

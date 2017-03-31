@@ -2,7 +2,8 @@
 
 var app = angular.module('uiApp', ['ngRoute']);
 
-
+var queryParam ;
+var pageNum;
 
 app.config(['$routeProvider',function ($routeProvider) {
     $routeProvider
@@ -11,14 +12,19 @@ app.config(['$routeProvider',function ($routeProvider) {
                 controller: 'HomeController',
                 templateUrl: '/static/partials/home.html'
             })
-        .when('/search/:query',
+        // .when('/search/:query',
+        //     {
+        //         controller: 'SearchController',
+        //         templateUrl: '/static/partials/search.html'
+        //     })
+        .when('/search/:query/:page_num',
             {
                 controller: 'SearchController',
                 templateUrl: '/static/partials/search.html'
             })
-        .when('/search/:query/:page_num',
+        .when('/search/:searchid',
             {
-                controller: 'SearchController',
+                controller: 'Search1Controller',
                 templateUrl: '/static/partials/search.html'
             })
         .when('/empty',

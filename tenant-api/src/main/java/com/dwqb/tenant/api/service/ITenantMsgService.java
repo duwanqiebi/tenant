@@ -5,6 +5,6 @@ package com.dwqb.tenant.api.service;
  */
 public interface ITenantMsgService {
 
-     String search(String queryStr, String pageNum);
+     String search(String queryStr, String pageNum , String json);
 
 }

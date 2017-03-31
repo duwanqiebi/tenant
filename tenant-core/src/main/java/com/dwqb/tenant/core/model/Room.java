@@ -18,6 +18,8 @@ public class Room implements Serializable{
 
     private List<String> subway;
 
+    private String description;
+
     private String name;
 
     private Double price;
@@ -108,7 +110,28 @@ public class Room implements Serializable{
         this.imgList = imgList;
     }
 
-
+    public Room(Long id, String roomOrigin, String url, String contractName, String contractTel, List<String> subway, String description, String name, Double price, Double longitude, Double latitude, String region, String priceType, String status, Double space, String dirction, String struct, String roomType, String floor, List<String> imgList) {
+        this.id = id;
+        this.roomOrigin = roomOrigin;
+        this.url = url;
+        this.contractName = contractName;
+        this.contractTel = contractTel;
+        this.subway = subway;
+        this.description = description;
+        this.name = name;
+        this.price = price;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.region = region;
+        this.priceType = priceType;
+        this.status = status;
+        this.space = space;
+        this.dirction = dirction;
+        this.struct = struct;
+        this.roomType = roomType;
+        this.floor = floor;
+        this.imgList = imgList;
+    }
 
     public Long getId() {
         return id;
@@ -260,5 +283,13 @@ public class Room implements Serializable{
 
     public void setSubway(List<String> subway) {
         this.subway = subway;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

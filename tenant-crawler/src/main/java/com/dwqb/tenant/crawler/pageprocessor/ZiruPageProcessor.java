@@ -102,6 +102,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String contractName = html.css(".org.pr").css("p","text").get().split("：")[1];
             String contractTel = html.css(".tel").css("div","text").get();
 
+            //描述
+            String description = "";
+            List<Selectable> desList = html.css(".aboutRoom.gray-6").css("p").nodes();
+            for(Selectable desSel : desList){
+                String temp = desSel.css("p","text").get();
+                description += temp + "\n";
+            }
+
             //图片地址
             List<String> imgList = html.css(".lof-main-outer > ul > li > a > img").xpath("/img/@src").all();
             imgList = this.removeDuplicate(imgList);
@@ -110,7 +118,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             Long id = IdGenerator.getId();
 //            room.setId(id);
 
-            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
+            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
 
 
 
