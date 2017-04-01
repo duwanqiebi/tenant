@@ -133,7 +133,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
     }
 
     public static void main(String pageNum) {
-        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(1);
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(2);
 //        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E4%B8%AD%E5%85%B3%E6%9D%91").thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();
