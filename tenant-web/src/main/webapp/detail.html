@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>search</title>
+    <link href="static/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+    <link href="static/css/app.css" rel="stylesheet">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?3af853a1f72c2a9101c1db3bcee51be9";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+<body ng-app='uiApp' style="padding-top: 0px;">
+<div class="container-fluid">
+    <div ng-controller="NavbarController" class="row header">
+        <div class="container">
+            <div class="pull-left">
+                <a href="/"><img src="/static/img/logo-sm.png" style="width: 50px;"></a>
+            </div>
+            <form ng-if="!is_homepage()" ng-submit="go('/search/{{query}}')" class="form-inline pull-right" style="padding: 10px;">
+                <div class="input-group">
+                    <input ng-model="query" ng-minlength="2" ng-maxlength="50" type="text" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="room_detail_left">
+            <div class="lof-slidecontent current_lof">
+                <div class="lof-main-outer" id="cao">
+                    <!--<div onclick="return false" href="javascript:;" class="lof-previous icon icon-prev"></div>-->
+                    <ul class="lof-main-wapper lof-opacity">
+                    </ul>
+                    <!--<div onclick="return false" href="javascript:;" class="lof-next icon icon-next"></div>-->
+                </div>
+                <div class="lof-navigator-wapper">
+                    <div onclick="return false" href="javascript:;" class="lof-previous icon icon-prev"></div>
+                    <div class="lof-navigator-outer" style="height: 405px; width: 165px;">
+                        <ul class="lof-navigator" style="height: 1620px; top: 0px;">
+                        </ul>
+                    </div>
+                    <div onclick="return false" href="javascript:;" class="lof-next icon icon-next"></div>
+                </div>
+            </div>
+            <div class="jianjie">
+
+            </div>
+            <div id="map" style="width: 100%;height: 200px;overflow: hidden;margin:0;"></div>
+
+        </div>
+
+        <div class="room_detail_right">
+            <div class="room_name"></div>
+            <ul class="detail_room">
+                <li><b></b>面积： <span id="detail_space"></span>㎡</li>
+                <li><b></b>楼层： <span id="detail_floor"></span></li>
+                <li><b></b>区域： <span id="detail_region"></span></li>
+                <li><b></b>价格： <span id="detail_price"></span></li>
+                <li><b></b>来源： <span id="detail_origin"></span></li>
+                <li><b></b>结构： <span id="detail_struct"></span></li>
+                <li><b></b>朝向： <span id="detail_direct"></span></li>
+                <li><b></b>联系人： <span id="detail_contractname"></span></li>
+                <li><b></b>联系电话： <span id="detail_contracttel"></span></li>
+                <li><b></b>地铁： <span id="detail_subway"></span></li>
+                <!--<li><b></b>描述： <span id="detail_des"></span></li>-->
+            </ul>
+
+            <button class="btn btn-primary" onclick="report()">虚假房源举报</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!--<div class="row footer text-center">-->
+        <!--&copy; zhaoxinwo.com 2015 | <a href="http://weibo.com/1704839092" target="_blank">@么什小洋</a> <a href="http://weibo.com/jiadebin1989" target="_blank">@Debin_IIE</a> | <a href="#/donate" style="color: red;"><img src="/static/img/alipay.png" style="max-height:20px;"></a>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; JiaThis Button BEGIN &ndash;&gt;-->
+    <!--<div class="jiathis_style" style="margin: 0px auto; width: 130px; padding: 5px;">-->
+        <!--<a class="jiathis_button_tsina"></a>-->
+        <!--<a class="jiathis_button_douban"></a>-->
+        <!--<a class="jiathis_button_weixin"></a>-->
+        <!--<a class="jiathis_button_renren"></a>-->
+        <!--<a class="jiathis_button_qzone"></a>-->
+        <!--<a href="http://www.jiathis.com/share?uid=1971839" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>-->
+    <!--</div>-->
+    <!-- JiaThis Button END -->
+</div>
+
+
+<script src="static/js/jquery-2.0.3.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular-route/1.3.13/angular-route.js"></script>
+<script src="http://code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
+<script src="static/bootstrap3/js/bootstrap.min.js"></script>
+<script src="static/js/app.js"></script>
+<script src="static/js/services.js"></script>
+<script src="static/js/controllers.js"></script>
+<script src="static/js/echarts.min.js"></script>
+<script src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.fancy-image').fancybox({'cyclic':true});
+    });
+</script>
+<script type="text/javascript" >
+    var jiathis_config = {
+        data_track_clickback:'true',
+        url:"http://www.zhaoxinwo.com/",
+        title:"分享一款基于豆瓣租房小组数据的搜房App: 找新窝(http://www.zhaoxinwo.com) #找新窝#",
+        summary:"",
+        pic:"http://ww1.sinaimg.cn/large/659dc7b4gw1ekvszwjxl9j20mk0rnwg3.jpg"
+    };
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1971839" charset="utf-8"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc"></script>
+
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc&services=&t=20170324173232"></script>
+
+
+<script type="text/javascript" >
+    $(document).ready(function(){
+        var id = GetQueryString("id");
+        console.log(id);
+        house = JSON.parse(sessionStorage.getItem(id));
+        console.log(house);
+
+        $("#title").text(house.name);
+        for(index in house.imgList){
+
+            var html = '<li><span class="woshi"></span><a href="' + house.imgList[index] +'" class="pirobox_t6">'
+                       + '<img style="margin: 0 auto;max-width: 632px;max-height: 475px;width: 100%;height: 100%;" src="' + house.imgList[index] +'"></a></li>';
+            var nonehtml = '<li style="display: none\;"><span class="woshi"></span><a href="' + house.imgList[index] +'" class="pirobox_t6">'
+                    + '<img style="margin: 0 auto;max-width: 632px;max-height: 475px;width: 100%;height: 100%;" src="' + house.imgList[index] +'"></a></li>';
+            if(index == 0){
+                $(".lof-main-wapper.lof-opacity").append(html);
+            }else{
+                $(".lof-main-wapper.lof-opacity").append(nonehtml);
+            }
+
+            var naviHtml = '<div class="active" style="height: 135px; width: 165px;"><div class="lidiv"><img style="height: 123px;width: 163px;opacity: 1;border: solid 1px #ccc;" src="' + house.imgList[index]
+                    + '><div class="bor_act"></div></div></li>';
+            var naviNoneHtml = '<div style="height: 135px; width: 165px;"><div class="lidiv"><img style="height: 123px;width: 163px;opacity: 1;border: solid 1px #ccc;" src="' + house.imgList[index]
+                    + '><div class="bor_act"></div></div></li>';
+            if(index == 0){
+                $(".lof-navigator").append(naviHtml);
+            }else{
+                $(".lof-navigator").append(naviNoneHtml);
+            }
+
+        }
+
+        $(".room_name").append('<h2><a href="' + house.url + '">' + house.name + '</a>></h2>');
+        $("#detail_space").text(house.space);
+        $("#detail_floor").text(house.floor);
+        $("#detail_region").text(house.region);
+        $("#detail_price").text(house.price);
+        $("#detail_struct").text(house.struct);
+        $("#detail_direct").text(house.dirction);
+        $("#detail_origin").text(house.roomOrigin);
+        $("#detail_contractname").text(house.contractName);
+        $("#detail_contracttel").text(house.contractTel);
+
+        if(house.subway.length > 0){
+            $("#detail_subway").append("<ul>");
+            for(index in house.subway){
+                $("#detail_subway").append("<li>" + house.subway[index] + "</li>");
+            }
+            $("#detail_subway").append("</ul>");
+        }
+
+        $(".jianjie").text(house.description);
+
+
+        var map = new BMap.Map("map");    // 创建Map实例
+        var point = new BMap.Point(house.longitude, house.latitude);
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        map.centerAndZoom(point, 11);
+        map.addControl(new BMap.MapTypeControl());
+        map.enableScrollWheelZoom(true);
+
+
+        //<a data-fancybox-group="fancy-group-1" class="fancy-image" target="_blank" href="{{image}}" ng-repeat="image in house.imgList">
+       // <img ng-src="{{image}}" style="height: 30px;"/>
+        //</a>
+
+    });
+
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+
+    function report(){
+        confirm("请问您确认举报该房源为虚假房源么?");
+    }
+</script>
+
+
+</body>
+</html>

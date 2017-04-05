@@ -89,24 +89,31 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         $scope.houses = data.houses;
 
 
-        $scope.renderFinish = function(){
-            var arr = $("div[name='house_body']");
-            for(var i = 0; i <arr.length; i ++){
-                $("<div id='map" +i+ "' style='height:200px\;width:300px'>1111</div>").appendTo(arr[i]);
-            }
+        // $scope.renderFinish = function(){
+        //     var arr = $("div[name='house_body']");
+        //     for(var i = 0; i <arr.length; i ++){
+        //         $("<div id='map" +i+ "' style='height:200px\;width:300px'>1111</div>").appendTo(arr[i]);
+        //     }
+        //
+        //     var index = 0;
+        //     for(;index < $scope.houses.length;index ++){
+        //         var house =  $scope.houses[index];
+        //         var map = new BMap.Map("map" + index);
+        //         console.log(house.latitude + " " + house.longitude);
+        //         var point = new BMap.Point(house.longitude, house.latitude);
+        //         var marker = new BMap.Marker(point);
+        //         map.addOverlay(marker);
+        //         map.centerAndZoom(point, 11);
+        //         map.addControl(new BMap.MapTypeControl());
+        //         map.enableScrollWheelZoom(true);
+        //     }
+        // }
 
-            var index = 0;
-            for(;index < $scope.houses.length;index ++){
-                var house =  $scope.houses[index];
-                var map = new BMap.Map("map" + index);
-                console.log(house.latitude + " " + house.longitude);
-                var point = new BMap.Point(house.longitude, house.latitude);
-                var marker = new BMap.Marker(point);
-                map.addOverlay(marker);
-                map.centerAndZoom(point, 11);
-                map.addControl(new BMap.MapTypeControl());
-                map.enableScrollWheelZoom(true);
-            }
+        $scope.detail = function(id,house){
+            console.log(id);
+            console.log(house);
+            sessionStorage.setItem(id,JSON.stringify(house));
+            window.open("/detail.html?id=" + id);
         }
 
 
@@ -159,28 +166,35 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
         $scope.houses = data.houses;
 
 
-        $scope.renderFinish = function(){
-            var arr = $("div[name='house_body']");
-            for(var i = 0; i <arr.length; i ++){
-                $("<div id='map" +i+ "' style='height:200px\;width:300px'>1111</div>").appendTo(arr[i]);
-            }
+        // $scope.renderFinish = function(){
+        //     var arr = $("div[name='house_body']");
+        //     for(var i = 0; i <arr.length; i ++){
+        //         $("<div id='map" +i+ "' style='height:200px\;width:300px'>1111</div>").appendTo(arr[i]);
+        //     }
+        //
+        //     setTimeout(function(){
+        //         var index = 0;
+        //         for(;index < $scope.houses.length;index ++){
+        //             var house =  $scope.houses[index];
+        //             var map = new BMap.Map("map" + index);
+        //             console.log(house.latitude + " " + house.longitude);
+        //             var point = new BMap.Point(house.longitude, house.latitude);
+        //             var marker = new BMap.Marker(point);
+        //             map.addOverlay(marker);
+        //             map.centerAndZoom(point, 11);
+        //             map.addControl(new BMap.MapTypeControl());
+        //             map.enableScrollWheelZoom(true);
+        //         }
+        //     },200);
+        //
+        //
+        // }
 
-            setTimeout(function(){
-                var index = 0;
-                for(;index < $scope.houses.length;index ++){
-                    var house =  $scope.houses[index];
-                    var map = new BMap.Map("map" + index);
-                    console.log(house.latitude + " " + house.longitude);
-                    var point = new BMap.Point(house.longitude, house.latitude);
-                    var marker = new BMap.Marker(point);
-                    map.addOverlay(marker);
-                    map.centerAndZoom(point, 11);
-                    map.addControl(new BMap.MapTypeControl());
-                    map.enableScrollWheelZoom(true);
-                }
-            },200);
-
-
+        $scope.detail = function(id,house){
+            console.log(id);
+            console.log(house);
+            sessionStorage.setItem(id,  JSON.stringify(house));
+            window.open("/detail.html?id=" + id);
         }
 
 

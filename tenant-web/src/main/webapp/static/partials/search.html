@@ -9,23 +9,23 @@
 <div ng-show="houses">
     <div class="row" ng-repeat="house in houses track by $index" repeat-finish="renderFinish()" ng-init="rowid=$index;mapid='map'+$index">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <a target="_blank" href="{{house.url}}">
-                            <span class="glyphicon glyphicon-bookmark"></span>
-                            <strong ng-bind-html-unsafe="house.name" ng-bind-html="house.name | to_trusted" style="font-size: larger">{{($index+1)+(page_num-1)*5}}.{{house.name}}
-                            </strong>
-                        </a>
+            <!--<div class="panel-heading">-->
+                <!--<div class="row">-->
+                    <!--<div class="col-lg-12">-->
+                        <!--<a target="_blank" ng-click="detail(house.id,house)">  &lt;!&ndash;href="{{house.url}}"&ndash;&gt;-->
+                            <!--<span class="glyphicon glyphicon-bookmark"></span>-->
+                            <!--<strong ng-bind-html-unsafe="house.name" ng-bind-html="house.name | to_trusted" style="font-size: larger">{{($index+1)+(page_num-1)*5}}.{{house.name}}-->
+                            <!--</strong>-->
+                        <!--</a>-->
 
-                        <!--<a>虚假房源举报</a>-->
-                        <a class="pull-right">虚假房源举报</a>
-                        <!--<span ng-show="house.sim.length" ng-click="showDetails = !showDetails" ng-init="showDetails=false" class="label label-primary">{{house.sim.length}}条相似内容 <span ng-class="{true:'glyphicon glyphicon-chevron-up', false:'glyphicon glyphicon-chevron-down'}[showDetails]"></span></span>-->
-                        <!--<span class="pull-right">{{house.pub_time}}</span>-->
-                        <!--<span class="pull-right" style="color:#F00">本房源疑似虚假房源!!!</span>-->
-                    </div>
-                </div>
-            </div>
+                        <!--&lt;!&ndash;<a>虚假房源举报</a>&ndash;&gt;-->
+                        <!--<a class="pull-right">虚假房源举报</a>-->
+                        <!--&lt;!&ndash;<span ng-show="house.sim.length" ng-click="showDetails = !showDetails" ng-init="showDetails=false" class="label label-primary">{{house.sim.length}}条相似内容 <span ng-class="{true:'glyphicon glyphicon-chevron-up', false:'glyphicon glyphicon-chevron-down'}[showDetails]"></span></span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="pull-right">{{house.pub_time}}</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="pull-right" style="color:#F00">本房源疑似虚假房源!!!</span>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <!--
             <div ng-show="showDetails" class="panel-heading" ng-repeat="sim in house.sim">
                 <div class="row">
@@ -36,31 +36,57 @@
                 </div>
             </div>
             -->
-            <div class="panel-body div-ellipsis">{{house.text}}</div>
+            <!--<div class="panel-body div-ellipsis">{{house.text}}</div>-->
 
-            <hr style="margin: 0px;">
+            <!--<hr style="margin: 0px;">-->
             <div class="panel-body" name="house_body">
-                <p ng-if="house.dizhi.length"><span class="glyphi  glyphicon-map-marker"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+dizhi) | escape}}" target="_blank" ng-repeat="dizhi in house.dizhi">{{dizhi}} </a></p>
-                <!--<p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{house.name}}</p>-->
-                <p ng-if="house.name">来源 : {{house.roomOrigin}}</p>
-                <p ng-if="house.space">大小 : {{house.space}}</p>
-                <p ng-if="house.price">价格 : {{house.price}}</p>
-                <p ng-if="house.struct">结构 : {{house.struct}}</p>
-                <p ng-if="house.subway.length">
-                    <span>地铁 : </span>
-                    <span ng-repeat="subwaySingle in house.subway" ng-bind-html="subwaySingle | to_trusted" >{{subwaySingle}};</span>
-                </p>
-                <p ng-if="house.contractName">联系人 : {{house.contractName}}</p>
-                <p ng-if="house.contractTel">联系电话 :  {{house.contractTel}}</p>
-                <p ng-if="house.links.length"><span class="glyphicon glyphicon-link"></span> <a target="_blank" href="{{link}}" ng-repeat="link in house.links">{{link}}</a></p>
-                <p ng-if="house.imgList.length"><span class="glyphicon glyphicon-picture"></span>
-                    <a data-fancybox-group="fancy-group-{{rowid}}" class="fancy-image" target="_blank" href="{{image}}" ng-repeat="image in house.imgList">
-                        <img ng-src="{{image}}" style="height: 30px;"/>
+
+                <div class="img pr">
+                    <a ng-click="detail(house.id,house)">
+                        <img ng-src="{{house.imgList[0]}}"/>
+
                     </a>
-                    <!--<a data-fancybox-group="fancy-group-{{rowid}}" class="fancy-image" target="_blank" href="{{image.0}}" title="{{image.1}}" ng-repeat="image in house.imgList">-->
-                        <!--<img ng-src="{{image.0}}" err-src="/static/img/default_image.png" style="height: 30px;">-->
+                </div>
+                <div class="txt">
+                    <h3>
+                        <a ng-click="detail(house.id,house)">{{house.name}}</a>
+                    </h3>
+                    <p>
+                        <span>{{house.struct}}</span>
+                        <span>{{house.space}} ㎡</span>
+                    </p>
+                    <p>
+                        {{house.region}}
+                    </p>
+                    <p ng-if="house.subway.length" ng-bind-html="house.subway[0] | to_trusted">{{house.subway[0]}}</p>
+                    <p>来自于 : {{house.roomOrigin}}</p>
+                </div>
+                <div class="priceDetail">
+                    <p class="price">￥{{house.price}}
+                        <span class="gray-6">(每月)</span>
+                    </p>
+                </div>
+                <!--<p ng-if="house.dizhi.length"><span class="glyphi  glyphicon-map-marker"></span> <a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s{{('&wd='+dizhi) | escape}}" target="_blank" ng-repeat="dizhi in house.dizhi">{{dizhi}} </a></p>-->
+                <!--&lt;!&ndash;<p ng-if="house.name"><span class="glyphicon glyphicon-road"></span>{{house.name}}</p>&ndash;&gt;-->
+                <!--<p ng-if="house.name">来源 : {{house.roomOrigin}}</p>-->
+                <!--<p ng-if="house.space">大小 : {{house.space}}</p>-->
+                <!--<p ng-if="house.price">价格 : {{house.price}}</p>-->
+                <!--<p ng-if="house.struct">结构 : {{house.struct}}</p>-->
+                <!--<p ng-if="house.subway.length">-->
+                    <!--<span>地铁 : </span>-->
+                    <!--<span ng-repeat="subwaySingle in house.subway" ng-bind-html="subwaySingle | to_trusted" >{{subwaySingle}};</span>-->
+                <!--</p>-->
+                <!--<p ng-if="house.contractName">联系人 : {{house.contractName}}</p>-->
+                <!--<p ng-if="house.contractTel">联系电话 :  {{house.contractTel}}</p>-->
+                <!--<p ng-if="house.links.length"><span class="glyphicon glyphicon-link"></span> <a target="_blank" href="{{link}}" ng-repeat="link in house.links">{{link}}</a></p>-->
+                <!--<p ng-if="house.imgList.length"><span class="glyphicon glyphicon-picture"></span>-->
+                    <!--<a data-fancybox-group="fancy-group-{{rowid}}" class="fancy-image" target="_blank" href="{{image}}" ng-repeat="image in house.imgList">-->
+                        <!--<img ng-src="{{image}}" style="height: 30px;"/>-->
                     <!--</a>-->
-                </p>
+                    <!--&lt;!&ndash;<a data-fancybox-group="fancy-group-{{rowid}}" class="fancy-image" target="_blank" href="{{image.0}}" title="{{image.1}}" ng-repeat="image in house.imgList">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img ng-src="{{image.0}}" err-src="/static/img/default_image.png" style="height: 30px;">&ndash;&gt;-->
+                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                <!--</p>-->
                 <!--<div style="height: 100px">-->
                     <!--<div id="map0" style="height: 100px"></div>-->
                 <!--</div>-->
@@ -93,4 +119,9 @@
         $(obj).addClass('select');
     }
 
+
+//    function detail(house){
+//        console.log("detail");
+//        console.log(house);
+//    }
 </script>

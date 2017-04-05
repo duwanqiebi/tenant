@@ -73,7 +73,7 @@ public class TenantMsgRestService implements ITenantMsgService{
             matchWrap.put("match",match);
             must.add(matchWrap);
         }
-        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr)){
+        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr) && !queryStr.contains("号线")){
             Map match = new HashMap();
             match.put("name",queryStr);
 
@@ -81,7 +81,7 @@ public class TenantMsgRestService implements ITenantMsgService{
             matchWrap.put("match",match);
             must.add(matchWrap);
         }
-        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr)){
+        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr) && !queryStr.contains("号线")){
             Map match = new HashMap();
             match.put("description",queryStr);
 
@@ -89,7 +89,7 @@ public class TenantMsgRestService implements ITenantMsgService{
             matchWrap.put("match",match);
             must.add(matchWrap);
         }
-        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr)){
+        if(!StringUtils.isBlank(queryStr) && !"null".equals(queryStr) && queryStr.contains("号线")){
             Map match = new HashMap();
             match.put("subway",queryStr);
 
@@ -159,7 +159,7 @@ public class TenantMsgRestService implements ITenantMsgService{
                     }
 
                     List subwayList = (List) highlightMap.get("subway");
-                    if(!CollectionUtils.isEmpty(nameList)){
+                    if(!CollectionUtils.isEmpty(subwayList)){
                         room.setSubway(subwayList);
                     }
 
