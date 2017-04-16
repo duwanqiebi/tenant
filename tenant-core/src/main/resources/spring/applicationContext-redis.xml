@@ -59,6 +59,14 @@
         <!--<property name="configuration" ref="hadoopConfiguration"/>-->
     <!--</bean>-->
 
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool" >
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig_r"/>
+        <constructor-arg name="host" value="${redis.host}"/>
+        <!--<constructor-arg name="password" value=""/>-->
+        <constructor-arg name="port" value="${redis.port}"/>
+        <constructor-arg name="timeout" value="2000"/>
+    </bean>
+
     <bean class="com.dwqb.tenant.core.utils.IdGenerator">
         <property name="redisTemplate" ref="redisTemplate"/>
     </bean>

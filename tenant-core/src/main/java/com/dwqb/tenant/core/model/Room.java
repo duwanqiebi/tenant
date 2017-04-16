@@ -46,6 +46,8 @@ public class Room implements Serializable{
 
     private List<String> imgList;
 
+
+
     public Room() {
     }
 
