@@ -14,6 +14,13 @@ public class Main {
         ApplicationContext applicationContext  = new ClassPathXmlApplicationContext("classpath:spring/application-worker.xml");
         Bayes bayes = applicationContext.getBean(Bayes.class);
         List<RoomBayes> roomBayes = bayes.getAll();
+        for(int i = 0 ; i < roomBayes.size() ; i ++){
+            if(i <= 60){
+                roomBayes.get(i).setStatus("true");
+            }else{
+                roomBayes.get(i).setStatus("false");
+            }
+        }
         bayes.getWeight(roomBayes);
     }
 }
