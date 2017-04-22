@@ -5,7 +5,9 @@ package com.dwqb.tenant.core.model;
  */
 public enum RoomOrigin {
 
-    ZI_RU("自如");
+    ZI_RU("自如"),
+
+    AN_JU_KE("安居客");
 
     private String roomOrigin;
 

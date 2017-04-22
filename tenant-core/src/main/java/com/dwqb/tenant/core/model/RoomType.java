@@ -14,7 +14,9 @@ public enum RoomType {
 
     SINGLE("一居室"),
 
-    TWO("2室1厅");
+    TWO("2室1厅"),
+
+    THREE("3室2厅");
 
     private String roomType;
 
@@ -38,7 +40,13 @@ public enum RoomType {
     }
 
     public static RoomType parseRoomType(String type){
-        return map.get(type.trim());
+        for(String key : map.keySet()){
+            if(type.contains(key)){
+                return map.get(key);
+            }
+        }
+        System.out.println("没有对应的rootType , " + type);
+        return null;
     }
 
     @Override
