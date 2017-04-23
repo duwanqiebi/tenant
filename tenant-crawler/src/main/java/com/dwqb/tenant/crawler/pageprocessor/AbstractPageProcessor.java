@@ -23,6 +23,7 @@ public abstract class AbstractPageProcessor implements PageProcessor{
         return this.site;
     }
 
+
     protected List<String> removeDuplicate(List<String> list){
         List<String> result = new ArrayList<>();
         for(String str : list){

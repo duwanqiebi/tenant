@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * Created by zhangqiang on 17/3/25.
- */
+
 public class AnjukePageProcessor extends AbstractPageProcessor{
 
     @Override
@@ -31,6 +29,7 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
         if(curUrl.contains("bj.zu.anjuke.com/fangyuan/p")){
             //目录页
             List<String> urls = html.xpath("//div[@class='zu-itemmod']/@link").all();
+            urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
         }else{          //详情页
             String roomName = html.xpath("//div[@class='tit cf']/h3/text()").get();
