@@ -69,7 +69,7 @@ public class LianjiaPageProcessor extends AbstractPageProcessor{
             List<String> imgList = html.xpath("//div[@class='thumbnail']//img/@src").all();
 
             Long id = IdGenerator.getId();
-            Room room = new Room(id, RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType.toString(),floor,imgList);
+            Room room = new Room(id, RoomOrigin.LIAN_JIA.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType.toString(),floor,imgList);
 
             ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
         }

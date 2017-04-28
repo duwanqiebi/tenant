@@ -5,6 +5,10 @@ package com.dwqb.tenant.core.model;
  */
 public enum RoomOrigin {
 
+    WO_AI_WO_JIA("我爱我家"),
+
+    LIAN_JIA("链家"),
+
     ZI_RU("自如"),
 
     AN_JU_KE("安居客");
