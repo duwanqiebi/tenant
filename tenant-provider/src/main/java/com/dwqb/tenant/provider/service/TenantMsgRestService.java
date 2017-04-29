@@ -12,6 +12,7 @@ import com.dwqb.tenant.core.utils.ObjUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wltea.analyzer.sample.IKAnalzyerDemo;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,6 +35,8 @@ public class TenantMsgRestService implements ITenantMsgService{
     @POST
     @Path("search/{queryStr}/{num}")
     public String search(@PathParam("queryStr") String queryStr,@PathParam("num") String pageNum, String json) {
+
+//        List<String> queryList = IKAnalzyerDemo.analzyer(queryStr);
 
         SearchRequestModel requestJson = JsonUtils2.json2Obj(json,SearchRequestModel.class);
 

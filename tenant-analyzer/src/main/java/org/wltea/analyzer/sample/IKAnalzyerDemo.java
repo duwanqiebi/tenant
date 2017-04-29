@@ -27,6 +27,8 @@ package org.wltea.analyzer.sample;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -41,45 +43,76 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
  *
  */
 public class IKAnalzyerDemo {
-	
-	public static void main(String[] args){
-		//构建IK分词器，使用smart分词模式
-		Analyzer analyzer = new IKAnalyzer(true);
-		
-		//获取Lucene的TokenStream对象
-	    TokenStream ts = null;
-		try {
-			ts = analyzer.tokenStream("myfield", new StringReader("这是一个中文分词的例子"));
-			//获取词元位置属性
-		    OffsetAttribute  offset = ts.addAttribute(OffsetAttribute.class); 
-		    //获取词元文本属性
-		    CharTermAttribute term = ts.addAttribute(CharTermAttribute.class);
-		    //获取词元文本属性
-		    TypeAttribute type = ts.addAttribute(TypeAttribute.class);
-		    
-		    
-		    //重置TokenStream（重置StringReader）
-			ts.reset(); 
-			//迭代获取分词结果
-			while (ts.incrementToken()) {
-			  System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type());
-			}
-			//关闭TokenStream（关闭StringReader）
-			ts.end();   // Perform end-of-stream operations, e.g. set the final offset.
 
-		} catch (IOException e) {
+	public static List<String> analzyer(String str){
+		List<String> result = new ArrayList<>();
+		Analyzer analyzer = new IKAnalyzer(true);
+		TokenStream ts = null;
+		try{
+			ts = analyzer.tokenStream("myfield", new StringReader(str));
+			OffsetAttribute  offset = ts.addAttribute(OffsetAttribute.class);
+			CharTermAttribute term = ts.addAttribute(CharTermAttribute.class);
+			TypeAttribute type = ts.addAttribute(TypeAttribute.class);
+			ts.reset();
+			while (ts.incrementToken()) {
+				result.add(term.toString());
+			}
+			ts.end();
+		}catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			//释放TokenStream的所有资源
 			if(ts != null){
-		      try {
-				ts.close();
-		      } catch (IOException e) {
-				e.printStackTrace();
-		      }
+				try {
+					ts.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-	    }
-		
+		}
+		return result;
+	}
+	
+	public static void main(String[] args){
+		List<String> result = IKAnalzyerDemo.analzyer("这是一个中文分词的例子");
+		System.out.println(result);
+//		//构建IK分词器，使用smart分词模式
+//		Analyzer analyzer = new IKAnalyzer(true);
+//
+//		//获取Lucene的TokenStream对象
+//	    TokenStream ts = null;
+//		try {
+//			ts = analyzer.tokenStream("myfield", new StringReader("这是一个中文分词的例子"));
+//			//获取词元位置属性
+//		    OffsetAttribute  offset = ts.addAttribute(OffsetAttribute.class);
+//		    //获取词元文本属性
+//		    CharTermAttribute term = ts.addAttribute(CharTermAttribute.class);
+//		    //获取词元文本属性
+//		    TypeAttribute type = ts.addAttribute(TypeAttribute.class);
+//
+//
+//		    //重置TokenStream（重置StringReader）
+//			ts.reset();
+//			//迭代获取分词结果
+//			while (ts.incrementToken()) {
+//			  System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type());
+//			}
+//			//关闭TokenStream（关闭StringReader）
+//			ts.end();   // Perform end-of-stream operations, e.g. set the final offset.
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			//释放TokenStream的所有资源
+//			if(ts != null){
+//		      try {
+//				ts.close();
+//		      } catch (IOException e) {
+//				e.printStackTrace();
+//		      }
+//			}
+//	    }
+//
 	}
 
 }
