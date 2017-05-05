@@ -8,6 +8,7 @@ import com.dwqb.tenant.core.model.RoomOrigin;
 import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -126,15 +128,18 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String json = JsonUtils2.obj2Json(room);
             ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
 
-
+            try {
+                hbase(room);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 
     }
 
-    public static void main(String pageNum) {
-        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(2);
-//        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E4%B8%AD%E5%85%B3%E6%9D%91").thread(1);
+    public  void doCrawer(String pageNum) {
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();
     }

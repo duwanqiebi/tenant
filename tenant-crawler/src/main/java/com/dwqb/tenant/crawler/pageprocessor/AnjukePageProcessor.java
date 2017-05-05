@@ -9,16 +9,18 @@ import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import com.dwqb.tenant.core.utils.URLUtils;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-
+@Component
 public class AnjukePageProcessor extends AbstractPageProcessor{
 
     @Override
@@ -68,12 +70,18 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             //es
             String json = JsonUtils2.obj2Json(room);
             ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+
+            try {
+                hbase(room);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
-    public static void main(String[] args) {
-        Spider ziruSpider = Spider.create(new AnjukePageProcessor()).addUrl("https://bj.zu.anjuke.com/fangyuan/p3").thread(1);
+    public static void doCrawer(String pageNum) {
+        Spider ziruSpider = Spider.create(new AnjukePageProcessor()).addUrl("https://bj.zu.anjuke.com/fangyuan/p" + pageNum).thread(1);
 //        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E4%B8%AD%E5%85%B3%E6%9D%91").thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();

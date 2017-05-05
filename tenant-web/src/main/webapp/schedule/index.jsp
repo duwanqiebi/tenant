@@ -38,7 +38,7 @@ t" href="importConfig.jsp" style="color:#0000CD">ImportÅäÖÃÊý¾Ý</a>
     }
 %>
 
-<iframe  name="content" FRAMEBORDER="0"  height="85%" width="100%" src="scherduleStrategyList.jsp?manager=<%=isManager%>"></iframe>
+<iframe  name="content" FRAMEBORDER="0"  height="85%" width="100%" src="scheduleStrategyList.jsp?manager=<%=isManager%>"></iframe>
 </body>
 </html>
 

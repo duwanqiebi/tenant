@@ -8,16 +8,18 @@ import com.dwqb.tenant.core.model.RoomOrigin;
 import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
+@Component
 public class LianjiaPageProcessor extends AbstractPageProcessor{
 
     @Override
@@ -72,11 +74,17 @@ public class LianjiaPageProcessor extends AbstractPageProcessor{
             Room room = new Room(id, RoomOrigin.LIAN_JIA.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType.toString(),floor,imgList);
 
             ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+
+            try {
+                hbase(room);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static void main(String[] args) {
-        Spider ziruSpider = Spider.create(new LianjiaPageProcessor()).addUrl("https://bj.lianjia.com/zufang/pg2/").thread(1);
+    public  void doCrawer(String pageNum) {
+        Spider ziruSpider = Spider.create(new LianjiaPageProcessor()).addUrl("https://bj.lianjia.com/zufang/pg" + pageNum).thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
         ziruSpider.run();
 

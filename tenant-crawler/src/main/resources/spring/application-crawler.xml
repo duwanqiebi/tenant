@@ -14,4 +14,17 @@
     <context:component-scan base-package="com.dwqb.tenant.core, com.dwqb.tenant.crawler" />
 
 
+    <bean id="scheduleManagerFactory" class="com.dwqb.tenant.schedule.strategy.TBScheduleManagerFactory" init-method="init">
+        <property name="zkConfig">
+            <map>
+                <entry key="zkConnectString" value="127.0.0.1:2182" />
+                <entry key="rootPath" value="/tenant" />
+                <entry key="zkSessionTimeout" value="6000" />
+                <entry key="userName" value="tenant" />
+                <entry key="password" value="tenant" />
+                <entry key="isCheckParentPath" value="true" />
+            </map>
+        </property>
+    </bean>
+
 </beans>
