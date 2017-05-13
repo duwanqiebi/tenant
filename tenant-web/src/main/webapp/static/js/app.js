@@ -25,7 +25,8 @@ app.config(['$routeProvider',function ($routeProvider) {
         .when('/search/:searchid',
             {
                 controller: 'Search1Controller',
-                templateUrl: '/static/partials/search.html'
+                templateUrl: '/static/partials/search.html',
+                url : '/static/partials/search.html'
             })
         .when('/empty',
             {
@@ -34,7 +35,7 @@ app.config(['$routeProvider',function ($routeProvider) {
             })
         .when('/donate',
             {
-                templateUrl: '/static/partials/donate.html'
+                templateUrl: '/static/static/partials/donate.html'
             })
         .when('/statistic',
             {

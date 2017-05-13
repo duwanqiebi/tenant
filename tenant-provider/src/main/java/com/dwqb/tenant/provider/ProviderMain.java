@@ -1,3 +1,5 @@
+package com.dwqb.tenant.provider;
+
 public class ProviderMain {
 
     public static void main(String[] args) {

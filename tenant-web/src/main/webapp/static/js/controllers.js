@@ -51,7 +51,7 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         $location.path('/home');
         return;
     }
-
+    
     //区域
     var area = $("#secitem-area").find(".select").html();
     //厅室
@@ -86,7 +86,14 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         // $scope.page_prev = data.page_prev;
         $scope.page_next = $routeParams.page_num, + 1;
         $scope.page_prev = $routeParams.page_num, - 1;
-        $scope.houses = data.houses;
+        console.log(data);
+        globledata = data;
+        if(data == ""){
+            $scope.houses = null;
+        }else{
+            $scope.houses = data.houses;
+        }
+
 
 
         // $scope.renderFinish = function(){

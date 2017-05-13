@@ -21,13 +21,21 @@
         <div ng-controller="NavbarController" class="row header">
             <div class="container">
                 <div class="pull-left">
-                    <a href="/"><img src="/static/img/logo-sm.png" style="width: 50px;"></a>
+                    <a href="/"><img src="static/img/logo-sm.png" style="width: 50px;"></a>
                 </div>
-                <form ng-if="!is_homepage()" ng-submit="go('/search/{{query}}')" class="form-inline pull-right" style="padding: 10px;">
+                <!--<form ng-if="!is_homepage()" ng-submit="go('/search/{{query}}')" class="form-inline pull-right" style="padding: 10px;">-->
+                    <!--<div class="input-group">-->
+                        <!--<input ng-model="query" ng-minlength="2" ng-maxlength="50" type="text" class="form-control">-->
+                    <!--<span class="input-group-btn">-->
+                        <!--<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>-->
+                    <!--</span>-->
+                    <!--</div>-->
+                <!--</form>-->
+                <form ng-if="!is_homepage()" class="form-inline pull-right" style="padding: 10px;">
                     <div class="input-group">
-                        <input ng-model="query" ng-minlength="2" ng-maxlength="50" type="text" class="form-control">
+                        <input  type="text" class="form-control" id="searchInput">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        <button class="btn btn-default" onclick="searchTenant()"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                     </div>
                 </form>
@@ -143,19 +151,8 @@
 
 
         <div class="container-fluid" ng-view></div>
-        <div class="row footer text-center">
-            &copy; zhaoxinwo.com 2015 | <a href="http://weibo.com/1704839092" target="_blank">@么什小洋</a> <a href="http://weibo.com/jiadebin1989" target="_blank">@Debin_IIE</a> | <a href="#/donate" style="color: red;"><img src="/static/img/alipay.png" style="max-height:20px;"></a>
-        </div>
-        <!-- JiaThis Button BEGIN -->
-        <div class="jiathis_style" style="margin: 0px auto; width: 130px; padding: 5px;">
-            <a class="jiathis_button_tsina"></a>
-            <a class="jiathis_button_douban"></a>
-            <a class="jiathis_button_weixin"></a>
-            <a class="jiathis_button_renren"></a>
-            <a class="jiathis_button_qzone"></a>
-            <a href="http://www.jiathis.com/share?uid=1971839" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-        </div>
-        <!-- JiaThis Button END -->∂
+
+        <!-- JiaThis Button END -->
     </div>
 
 
@@ -173,6 +170,11 @@
         $(document).ready(function() {
             $('.fancy-image').fancybox({'cyclic':true});
         });
+
+        function searchTenant(){
+            var queryStr = $("#searchInput").val();
+            location.href="#/search/" + queryStr + "/1";
+        }
     </script>
     <script type="text/javascript" >
         var jiathis_config = {

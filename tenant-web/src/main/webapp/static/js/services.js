@@ -10,6 +10,7 @@ app.factory('House', function($http) {
             // if(page_num == undefined) uri += '/1';
             // else uri += '/' + page_num;
             console.log("service");
+            console.log("query1 = " + query)
             if(query==undefined){
                 query=null
             }
