@@ -32,6 +32,9 @@ public class LianjiaPageProcessor extends AbstractPageProcessor{
             urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
         }else{          //详情页
+            if(this.isDetailHandled(curUrl)){
+                return;
+            }
             String roomName = html.xpath("//div[@class='title']/h1/text()").get();
             String price = html.xpath("//span[@class='total']/text()").get();
             List<Selectable> detail = html.xpath("//div[@class='zf-room']/p").nodes();
@@ -80,6 +83,8 @@ public class LianjiaPageProcessor extends AbstractPageProcessor{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            this.handled(curUrl);
         }
     }
 

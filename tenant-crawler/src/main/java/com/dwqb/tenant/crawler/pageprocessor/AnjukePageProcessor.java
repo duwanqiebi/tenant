@@ -34,6 +34,9 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
         }else{          //详情页
+            if(this.isDetailHandled(curUrl)){
+                return;
+            }
             String roomName = html.xpath("//div[@class='tit cf']/h3/text()").get();
             List<Selectable> detail = html.xpath("//dl[@class='p_phrase cf']").nodes();
             String price = detail.get(0).xpath("//dd[@class='og']/strong/span/text()").get();
@@ -76,6 +79,8 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            this.handled(curUrl);
         }
     }
 

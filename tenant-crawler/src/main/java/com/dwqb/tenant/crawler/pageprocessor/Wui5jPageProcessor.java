@@ -22,6 +22,11 @@ public class Wui5jPageProcessor extends AbstractPageProcessor{
             urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
         }else{
+
+            if(this.isDetailHandled(curUrl)){
+                return;
+            }
+
             String rootName = html.xpath("//h1[@class='house-tit']/text()").get();
             String price = html.xpath("//span[@class='font-price']/text()").get();
 
@@ -41,6 +46,9 @@ public class Wui5jPageProcessor extends AbstractPageProcessor{
             String floor = detail.get(5).xpath("//li/text()").get();
 
 //            List<String> imgList = html.
+
+
+            this.handled(curUrl);
         }
     }
 

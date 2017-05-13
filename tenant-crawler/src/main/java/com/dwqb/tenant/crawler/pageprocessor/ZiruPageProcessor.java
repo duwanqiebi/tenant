@@ -34,8 +34,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
         if(curUrl.contains("/z/nl")) {         //目录页
             List<String> urls = html.css(".t1").links().all();
+            urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
         }else{                                  //详情页
+
+            if(this.isDetailHandled(curUrl)){
+                return;
+            }
+
             String roomName = html.css(".room_name > h2","text").get();
             String price = html.css(".room_price","text").get();
             if(price.length() > 0){
@@ -133,6 +139,8 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            this.handled(curUrl);
         }
 
 

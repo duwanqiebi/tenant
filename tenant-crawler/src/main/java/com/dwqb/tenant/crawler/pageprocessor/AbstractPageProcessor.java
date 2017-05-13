@@ -1,6 +1,7 @@
 package com.dwqb.tenant.crawler.pageprocessor;
 
 import com.dwqb.tenant.core.model.Room;
+import com.dwqb.tenant.crawler.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
@@ -8,8 +9,10 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
+import redis.clients.jedis.Jedis;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
+import us.codecraft.webmagic.scheduler.RedisScheduler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +44,27 @@ public abstract class AbstractPageProcessor implements PageProcessor{
             }
         }
         return result;
+    }
+
+    /**
+     * 如果爬过,则返回true
+     * @param url
+     * @return
+     */
+    protected boolean isDetailHandled(String url){
+        Jedis jedis = RedisUtil.getJedis();
+        String result = jedis.get(url);
+        if(result != null){
+            return true;
+        }
+        RedisUtil.returnResource(jedis);
+        return false;
+    }
+
+    protected void handled(String url){
+        Jedis jedis = RedisUtil.getJedis();
+        jedis.set(url,"handled");
+        RedisUtil.returnResource(jedis);
     }
 
     public void hbase(Room room) throws IOException {
