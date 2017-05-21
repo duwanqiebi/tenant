@@ -15,7 +15,7 @@
 
     <!-- 注册中心配置 -->
     <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Aregistry%2F%3E -->
-    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <dubbo:registry address="zookeeper://127.0.0.1:2182"/>
 
     <!-- 监控中心配置 -->
     <!-- http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Amonitor%2F%3E -->

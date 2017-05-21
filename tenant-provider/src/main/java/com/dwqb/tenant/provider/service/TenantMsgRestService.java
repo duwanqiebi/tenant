@@ -132,13 +132,13 @@ public class TenantMsgRestService implements ITenantMsgService{
 
         TenantMsgResponse response = null;
 
-        String uri = "http://localhost:9200/room/room/_search";
+        String uri = "http://112.74.79.166:9200/room/room/_search";
 
 //        EsModel esModel = new EsModel(new EsQueryModel(new EsMatchModel(queryStr)),Integer.parseInt(pageNum) * num,num);
         logger.info("es request json " + JsonUtils2.obj2Json(queryWrap));
 
         String result = ESUtils.curl(uri,"POST", JsonUtils2.obj2Json(queryWrap));
-
+        logger.info(result);
         Map map = JsonUtils2.json2Obj(result, Map.class);
         Map hits = (Map) map.get("hits");
         int total = (int) hits.get("total");
@@ -151,7 +151,12 @@ public class TenantMsgRestService implements ITenantMsgService{
                 Map curMap = (Map)obj;
                 Room room = null;
                 try {
-                    room = (Room) ObjUtils.mapToObject((Map)curMap.get("_source"),Room.class);
+                    Map source = (Map)curMap.get("_source");
+//                    logger.info(source.get("subway").toString());
+                    if(source.get("subway") == null || "null".equals(source.get("subway"))){
+                        source.put("subway",new ArrayList<String>());
+                    }
+                    room = (Room) ObjUtils.mapToObject(source,Room.class);
 
                     //高亮字段解析
                     Map highlightMap = (Map) curMap.get("highlight");
@@ -169,6 +174,7 @@ public class TenantMsgRestService implements ITenantMsgService{
 
 
                 } catch (Exception e) {
+                    logger.error("",e);
                     e.printStackTrace();
                 }
                 //Room room = (Room)curMap.get("_source");
@@ -182,8 +188,77 @@ public class TenantMsgRestService implements ITenantMsgService{
 
 
     public static void main(String[] args){
-        String json = "{\"query\":{\"bool\":{\"must\":[{\"term\":{\"region\":\"大兴区\"}},{\"match\":{\"roomType\":\"2室1厅\"}},{\"term\":{\"roomOrigin\":\"自如\"}},{\"match\":{\"subway\":\"4号线\"}}]}}}";
+        String json = "{\n" +
+                "          \"id\": 1668,\n" +
+                "          \"roomOrigin\": \"安居客\",\n" +
+                "          \"url\": \"http://bj.zu.anjuke.com/fangyuan/1064876755\",\n" +
+                "          \"contractName\": \"张智博\",\n" +
+                "          \"contractTel\": \"18710206748\",\n" +
+                "          \"subway\": null,\n" +
+                "          \"description\": \"<div class=\\\"pro_main cf\\\" id=\\\"propContent\\\" style=\\\"\\\"> \\n <div class=\\\"pro_con wb\\\">\\n  蛋壳2周年，新春送大礼！三重优惠，重大来袭！蛋壳签约两年保证不涨租！蛋壳签约两年再减免1200元！蛋壳签约两年中途可以随时退换！选择蛋壳，选择美好生活！（详情请电话*管家）[温馨提示]房间照片*实拍，拎包入住！看房无*，租房无*。看房请直接来电!蛋壳公寓回归家的温暖，让你在异乡不在流浪【房源详情】您好，这套房子是三室一厅，主卧朝南，带飘窗，采光极好16平米，飘窗面积很大，靠在飘窗上喝杯咖啡，看书听音乐，是种很舒适的享受，房间配置全新家具，家电，双周免费保洁，小区绿化30%以上，可随时可看房，此房仅此一间哦。【小区周边】\\n </div> \\n</div>\",\n" +
+                "          \"name\": \"蛋壳公寓特价房源，仅此一间 免费网络可月付后一天\",\n" +
+                "          \"price\": 2100,\n" +
+                "          \"longitude\": 116.46293,\n" +
+                "          \"latitude\": 39.940168,\n" +
+                "          \"region\": \"朝阳区\",\n" +
+                "          \"priceType\": \"付1押1\",\n" +
+                "          \"status\": null,\n" +
+                "          \"space\": 15,\n" +
+                "          \"dirction\": \"南\",\n" +
+                "          \"struct\": \"3室1厅1卫\",\n" +
+                "          \"roomType\": \"卧室\",\n" +
+                "          \"floor\": \"5/12\",\n" +
+                "          \"imgList\": [\n" +
+                "            \"http://b.pic1.ajkimg.com/display/hj/10f0b387b6fd9cf0cf790cf0ea09fb77/600x450.jpg?t=1\",\n" +
+                "            \"http://d.pic1.ajkimg.com/display/hj/c4f3787df6bb425d09b17c8f7fab47b6/600x450.jpg?t=1\",\n" +
+                "            \"http://c.pic1.ajkimg.com/display/hj/6c391f1d31455bc77da745cc5f193f22/600x450.jpg?t=1\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://b.pic1.ajkimg.com/display/hj/10f0b387b6fd9cf0cf790cf0ea09fb77/67x50c.jpg?t=1\",\n" +
+                "            \"http://d.pic1.ajkimg.com/display/hj/c4f3787df6bb425d09b17c8f7fab47b6/67x50c.jpg?t=1\",\n" +
+                "            \"http://c.pic1.ajkimg.com/display/hj/6c391f1d31455bc77da745cc5f193f22/67x50c.jpg?t=1\",\n" +
+                "            \"http://b.pic1.ajkimg.com/display/hj/e5d5e0e1ad5f57db2af982acebb45a23/67x50c.jpg?t=1\",\n" +
+                "            \"http://c.pic1.ajkimg.com/display/hj/bc78dd354309d66db5b3c4e3801e8ef8/67x50c.jpg?t=1\",\n" +
+                "            \"http://b.pic1.ajkimg.com/display/hj/19ad20fc1fb418641deae088b3fb1cfe/67x50c.jpg?t=1\",\n" +
+                "            \"http://c.pic1.ajkimg.com/display/hj/214dfd43c061733adcc6899be16c6391/67x50c.jpg?t=1\",\n" +
+                "            \"http://d.pic1.ajkimg.com/display/hj/32d1262d426e7d077977996ffe198422/67x50c.jpg?t=1\",\n" +
+                "            \"http://d.pic1.ajkimg.com/display/hj/705b50fab6e5ce467d78fa9788525911/67x50c.jpg?t=1\",\n" +
+                "            \"http://d.pic1.ajkimg.com/display/hj/c8bda12b2910d00b79a431592c95b539/67x50c.jpg?t=1\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pages.anjukestatic.com/usersite/site/img/global/1/bg_default.jpg\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/10:46393800/67x50.jpg\",\n" +
+                "            \"http://b.pic1.ajkimg.com/display/hj/920eb70fc31d5fd67f12720d8f6f2dde/67x50.jpg\",\n" +
+                "            \"http://a.pic1.ajkimg.com/display/hj/0d1534e569c7df7c4a716e6f8ccd5dbc/67x50.jpg\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/849e5c592c3c9424773c902dd97ea815/67x50c.jpg?t=1\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/01aa02e6a16cee6ab41a913404e0de6d/67x50c.jpg?t=1\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/5422a8fe688162985a4c0b1f103ebcb0/67x50c.jpg?t=1\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/dc20e41874d345b23caae39d529e2e66/67x50c.jpg?t=1\",\n" +
+                "            \"http://pic1.ajkimg.com/display/hj/ad21b7045fcd97538f6f861be13c9f06/67x50c.jpg?t=1\",\n" +
+                "            \"http://images12.anjukestatic.com/community/20100719/1/11/1/83/85/111018385/67x50c.jpg\",\n" +
+                "            \"http://images12.anjukestatic.com/community/20100719/1/11/1/83/74/111018374/67x50c.jpg\"\n" +
+                "          ]\n" +
+                "        }";
         Map map = JsonUtils2.json2Obj(json,Map.class);
+        try {
+            Room room = (Room) ObjUtils.mapToObject(map,Room.class);
+            System.out.println(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println(1);
+
     }
 }

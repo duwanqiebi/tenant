@@ -9,12 +9,13 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 public class RedisUtil {
     //Redis服务器IP
-    private static String ADDR = "127.0.0.1";
+    private static String ADDR = "112.74.79.166";
 
     //Redis的端口号
-    private static int PORT = 6379;
+    private static int PORT = 6500;
 
     //访问密码
+    private static String password="zhangqiang";
 
     //可用连接实例的最大数目，默认值为8；
     //如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。
@@ -42,7 +43,7 @@ public class RedisUtil {
             config.setMaxTotal(MAX_ACTIVE);
             config.setMaxIdle(MAX_IDLE);
             config.setTestOnBorrow(TEST_ON_BORROW);
-            jedisPool = new JedisPool(config, ADDR, PORT, TIMEOUT);
+            jedisPool = new JedisPool(config, ADDR, PORT, TIMEOUT,password);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -11,6 +11,7 @@ import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.selector.Html;
@@ -18,10 +19,12 @@ import us.codecraft.webmagic.selector.Selectable;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by zhangqiang on 16/11/16.
  */
+@Component
 public class WUBAPageProcessor extends AbstractPageProcessor{
 
     private static Logger logger = LoggerFactory.getLogger(WUBAPageProcessor.class);
@@ -40,6 +43,7 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
         }
         else{                                                              //详情页
             if(this.isDetailHandled(curUrl)){
+                logger.info("已经抓取过" + curUrl);
                 return;
             }
 
@@ -89,18 +93,18 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
             List<String> imgList = html.xpath("//div[@class='basic-pic-list pr']//img/@src").all();
 
             Long id = IdGenerator.getId();
-            Room room = new Room(id, RoomOrigin.WUBA.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType.toString(),floor,imgList);
+            Room room = new Room(id, RoomOrigin.WUBA.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://112.74.79.166:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
 
-            try {
-                hbase(room);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+//            try {
+//                hbase(room);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
             this.handled(curUrl);
         }
 
@@ -108,9 +112,23 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
 
     }
 
+    public  void doCrawer(String pageNum) {
+        Spider ziruSpider = Spider.create(new WUBAPageProcessor());
+        int num = Integer.parseInt(pageNum);
+        while(num >= 1){
+            ziruSpider.addUrl("http://bj.58.com/zufang/pn" + num);
+            num --;
+        }
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(2000));
+        ziruSpider.run();
+    }
 
-    public static void main(String[] args) {
-
-        Spider.create(new WUBAPageProcessor()).addUrl("http://bj.58.com/zufang/pn2/").thread(1).run();
+    public void doCrawerByNum(String s) {
+        Spider ziruSpider = Spider.create(new WUBAPageProcessor());
+        ziruSpider.addUrl("http://bj.58.com/zufang/pn" + s);
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(4000));
+        ziruSpider.run();
     }
 }

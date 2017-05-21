@@ -9,6 +9,8 @@ import com.dwqb.tenant.core.model.RoomType;
 import com.dwqb.tenant.core.utils.IdGenerator;
 import com.dwqb.tenant.core.utils.JsonUtils2;
 import com.dwqb.tenant.core.utils.URLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Spider;
@@ -23,6 +25,9 @@ import java.util.Random;
 @Component
 public class AnjukePageProcessor extends AbstractPageProcessor{
 
+    private static Logger logger = LoggerFactory.getLogger(AnjukePageProcessor.class);
+
+
     @Override
     public void process(Page page) {
         String curUrl = page.getUrl().toString();
@@ -35,6 +40,7 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             page.addTargetRequests(urls);
         }else{          //详情页
             if(this.isDetailHandled(curUrl)){
+                logger.info("已经抓取过" + curUrl);
                 return;
             }
             String roomName = html.xpath("//div[@class='tit cf']/h3/text()").get();
@@ -67,18 +73,18 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             String description = html.xpath("//div[@id='propContent']").toString();
 
             Long id = IdGenerator.getId();
-            Room room = new Room(id, RoomOrigin.AN_JU_KE.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,null,Double.parseDouble(space),direction,struct,roomType.toString(),floor,imgList);
+            Room room = new Room(id, RoomOrigin.AN_JU_KE.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,null,Double.parseDouble(space.replaceAll("\\D", "")),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
 
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://112.74.79.166:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
 
-            try {
-                hbase(room);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                hbase(room);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             this.handled(curUrl);
         }
@@ -86,9 +92,22 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
 
 
     public static void doCrawer(String pageNum) {
-        Spider ziruSpider = Spider.create(new AnjukePageProcessor()).addUrl("https://bj.zu.anjuke.com/fangyuan/p" + pageNum).thread(1);
-//        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/z2.html?qwd=%E4%B8%AD%E5%85%B3%E6%9D%91").thread(1);
-        ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
+        Spider ziruSpider = Spider.create(new AnjukePageProcessor());
+        int num = Integer.parseInt(pageNum);
+        while(num >= 1){
+            ziruSpider.addUrl("http://bj.zu.anjuke.com/fangyuan/p" + num + "/");
+            num --;
+        }
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(4000));
+        ziruSpider.run();
+    }
+
+    public void doCrawerByNum(String pageNum) {
+        Spider ziruSpider = Spider.create(new AnjukePageProcessor());
+        ziruSpider.addUrl("http://bj.zu.anjuke.com/fangyuan/p" + pageNum + "/");
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(2000));
         ziruSpider.run();
     }
 }

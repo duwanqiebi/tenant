@@ -9,7 +9,7 @@ echo "app name is ${APP} "
 
 
 #JMX_PORT=`expr 8500`
-JAVA_OPTS="-server -Xms1024m -Xmx1024m -Xmn384m -XX:MaxPermSize=128m \
+JAVA_OPTS="-server -Xms128m -Xmx216m -Xmn100m -XX:MaxPermSize=64m \
 -Xss256k -XX:+UseConcMarkSweepGC \
 -XX:+UseParNewGC -XX:CMSFullGCsBeforeCompaction=5 \
 -XX:+UseCMSCompactAtFullCollection \

@@ -39,6 +39,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
         }else{                                  //详情页
 
             if(this.isDetailHandled(curUrl)){
+                logger.info("已经抓取过" + curUrl);
                 return;
             }
 
@@ -124,21 +125,17 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
 
 
             Long id = IdGenerator.getId();
-//            room.setId(id);
-
-            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,status,Double.parseDouble(space),dirction,struct,roomType.toString(),floor,imgList);
-
-
+            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,"true",Double.parseDouble(space),dirction,struct,roomType != null? roomType.toString():struct,floor,imgList);
 
             //es
             String json = JsonUtils2.obj2Json(room);
-            ESUtils.curl("http://localhost:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
+            ESUtils.curl("http://112.74.79.166:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
 
-            try {
-                hbase(room);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                hbase(room);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             this.handled(curUrl);
         }
@@ -147,8 +144,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
     }
 
     public  void doCrawer(String pageNum) {
-        Spider ziruSpider = Spider.create(new ZiruPageProcessor()).addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum).thread(1);
-        ziruSpider.setEmptySleepTime(new Random().nextInt(1000));
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor());
+        int num = Integer.parseInt(pageNum);
+        while(num >= 1){
+            ziruSpider.addUrl("http://www.ziroom.com/z/nl/?p=" + num);
+            num --;
+        }
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(5000));
         ziruSpider.run();
     }
 }

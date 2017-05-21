@@ -53,7 +53,7 @@ public abstract class AbstractPageProcessor implements PageProcessor{
      */
     protected boolean isDetailHandled(String url){
         Jedis jedis = RedisUtil.getJedis();
-        String result = jedis.get(url);
+        String result = jedis.get("handled:" + url);
         if(result != null){
             return true;
         }
@@ -63,12 +63,14 @@ public abstract class AbstractPageProcessor implements PageProcessor{
 
     protected void handled(String url){
         Jedis jedis = RedisUtil.getJedis();
-        jedis.set(url,"handled");
+        jedis.set("handled:" + url,"handled");
         RedisUtil.returnResource(jedis);
     }
 
     public void hbase(Room room) throws IOException {
         Configuration conf = HBaseConfiguration.create();
+        conf.set("hbase.zookeeper.quorum","localhost:2181");
+        conf.set("hbase.rootdir","file:/root/data/hbase/hbase");
         HTable hTable = new HTable(conf, "room");
         Put p = new Put(Bytes.toBytes(room.getId()));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("contractName"),Bytes.toBytes(room.getContractName()));
@@ -80,7 +82,7 @@ public abstract class AbstractPageProcessor implements PageProcessor{
         p.add(Bytes.toBytes("info"), Bytes.toBytes("longtitude"),Bytes.toBytes(room.getLongitude()));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("name"),Bytes.toBytes(room.getName()));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("price"),Bytes.toBytes(room.getPrice()));
-        p.add(Bytes.toBytes("info"), Bytes.toBytes("priceType"),Bytes.toBytes(room.getPriceType()));
+        p.add(Bytes.toBytes("info"), Bytes.toBytes("priceType"),Bytes.toBytes("null"));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("region"),Bytes.toBytes(room.getRegion()));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("roomOrigin"),Bytes.toBytes(room.getRoomOrigin()));
         p.add(Bytes.toBytes("info"), Bytes.toBytes("roomType"),Bytes.toBytes(room.getRoomType()));
@@ -101,4 +103,5 @@ public abstract class AbstractPageProcessor implements PageProcessor{
         p.add(Bytes.toBytes("info"), Bytes.toBytes("name"),Bytes.toBytes("1111"));
         hTable.put(p);
     }
+
 }
