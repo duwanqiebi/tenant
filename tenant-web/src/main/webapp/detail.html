@@ -37,13 +37,19 @@
 
     <div class="row">
         <div class="room_detail_left">
-            <div class="lof-slidecontent current_lof">
+
+
+            <div id="lofslidecontent45" class="lof-slidecontent">
+                <div class="preload"><div></div></div>
+
+
                 <div class="lof-main-outer" id="cao">
-                    <!--<div onclick="return false" href="javascript:;" class="lof-previous icon icon-prev"></div>-->
-                    <ul class="lof-main-wapper lof-opacity">
+                    <ul class="lof-main-wapper">
                     </ul>
                     <!--<div onclick="return false" href="javascript:;" class="lof-next icon icon-next"></div>-->
                 </div>
+
+
                 <div class="lof-navigator-wapper">
                     <div onclick="return false" href="javascript:;" class="lof-previous icon icon-prev"></div>
                     <div class="lof-navigator-outer" style="height: 405px; width: 165px;">
@@ -79,27 +85,6 @@
             <button class="btn btn-primary" onclick="report()">虚假房源举报</button>
         </div>
     </div>
-
-
-
-
-
-
-
-
-    <!--<div class="row footer text-center">-->
-        <!--&copy; zhaoxinwo.com 2015 | <a href="http://weibo.com/1704839092" target="_blank">@么什小洋</a> <a href="http://weibo.com/jiadebin1989" target="_blank">@Debin_IIE</a> | <a href="#/donate" style="color: red;"><img src="/static/img/alipay.png" style="max-height:20px;"></a>-->
-    <!--</div>-->
-    <!--&lt;!&ndash; JiaThis Button BEGIN &ndash;&gt;-->
-    <!--<div class="jiathis_style" style="margin: 0px auto; width: 130px; padding: 5px;">-->
-        <!--<a class="jiathis_button_tsina"></a>-->
-        <!--<a class="jiathis_button_douban"></a>-->
-        <!--<a class="jiathis_button_weixin"></a>-->
-        <!--<a class="jiathis_button_renren"></a>-->
-        <!--<a class="jiathis_button_qzone"></a>-->
-        <!--<a href="http://www.jiathis.com/share?uid=1971839" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>-->
-    <!--</div>-->
-    <!-- JiaThis Button END -->
 </div>
 
 
@@ -110,26 +95,22 @@
 <script src="static/bootstrap3/js/bootstrap.min.js"></script>
 <script src="static/js/app.js"></script>
 <script src="static/js/services.js"></script>
+<script src="static/js/script.js"></script>
+<script src="static/js/jquery.easing.js"></script>
 <script src="static/js/controllers.js"></script>
 <script src="static/js/echarts.min.js"></script>
-<script src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.fancy-image').fancybox({'cyclic':true});
-    });
-</script>
-<script type="text/javascript" >
-    var jiathis_config = {
-        data_track_clickback:'true',
-        url:"http://www.zhaoxinwo.com/",
-        title:"分享一款基于豆瓣租房小组数据的搜房App: 找新窝(http://www.zhaoxinwo.com) #找新窝#",
-        summary:"",
-        pic:"http://ww1.sinaimg.cn/large/659dc7b4gw1ekvszwjxl9j20mk0rnwg3.jpg"
-    };
-</script>
+<!--<script src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>-->
+<!--<script type="text/javascript" >-->
+    <!--var jiathis_config = {-->
+        <!--data_track_clickback:'true',-->
+        <!--url:"http://www.zhaoxinwo.com/",-->
+        <!--title:"分享一款基于豆瓣租房小组数据的搜房App: 找新窝(http://www.zhaoxinwo.com) #找新窝#",-->
+        <!--summary:"",-->
+        <!--pic:"http://ww1.sinaimg.cn/large/659dc7b4gw1ekvszwjxl9j20mk0rnwg3.jpg"-->
+    <!--};-->
+<!--</script>-->
 <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1971839" charset="utf-8"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc"></script>
-
 <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=fPHf9fN80YS715i7Tqmgp2d7LSnDEbGc&services=&t=20170324173232"></script>
 
 
@@ -148,9 +129,9 @@
             var nonehtml = '<li style="display: none\;"><span class="woshi"></span><a href="' + house.imgList[index] +'" class="pirobox_t6">'
                     + '<img style="margin: 0 auto;max-width: 632px;max-height: 475px;width: 100%;height: 100%;" src="' + house.imgList[index] +'"></a></li>';
             if(index == 0){
-                $(".lof-main-wapper.lof-opacity").append(html);
+                $(".lof-main-wapper").append(html);
             }else{
-                $(".lof-main-wapper.lof-opacity").append(nonehtml);
+                $(".lof-main-wapper").append(nonehtml);
             }
 
             var naviHtml = '<div class="active" style="height: 135px; width: 165px;"><div class="lidiv"><img style="height: 123px;width: 163px;opacity: 1;border: solid 1px #ccc;" src="' + house.imgList[index]
@@ -184,7 +165,7 @@
             $("#detail_subway").append("</ul>");
         }
 
-        $(".jianjie").text(house.description);
+        $(".jianjie").html(house.description);
 
 
         var map = new BMap.Map("map");    // 创建Map实例
@@ -199,6 +180,57 @@
         //<a data-fancybox-group="fancy-group-1" class="fancy-image" target="_blank" href="{{image}}" ng-repeat="image in house.imgList">
        // <img ng-src="{{image}}" style="height: 30px;"/>
         //</a>
+
+        var buttons = {
+            previous:$('#lofslidecontent45 .lof-previous'),
+            next:$('#lofslidecontent45 .lof-next')
+        };
+        $('#lofslidecontent45').lofJSidernews({
+            interval : 4000,
+            direction : 'opacity',
+            duration : 200,
+            auto : false,
+            maxItemDisplay : 3,
+            navPosition : 'vertical', // horizontal
+            navigatorHeight : 135,
+            navigatorWidth : 165,
+            mainWidth:165,
+            buttons : buttons
+        });
+        var photoIndex = 0;
+        var photoLen   = $('#lofslidecontent45 .lof-main-wapper li').size();
+        console.log("photoLen = " + photoLen);
+        $('.pirobox_t6').click(function(){
+            photoIndex = $(this).parent().index();
+            $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).show().siblings().hide();
+
+            $('#bigPhotShow').show();
+            marTopCount(photoIndex);
+            return false;
+        });
+
+        $('#lofslidecontent45 .lof-next').click(function(){
+            photoIndex++;
+            photoIndex = photoIndex%photoLen;
+            $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).show().siblings().hide();
+            marTopCount(photoIndex);
+        });
+
+        $('#bigPhotShow .close').click(function(){
+            $('#bigPhotShow').hide();
+        });
+
+        $('#lofslidecontent45 .icon-prev').click(function(){
+            photoIndex--;
+            photoIndex = photoIndex < 0 ? (photoLen-1) : photoIndex;
+            $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).show().siblings().hide();
+            marTopCount(photoIndex);
+        });
+
+        function marTopCount(photoIndex){
+            var oImg = $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).find('img');
+//            oImg.css({'margin-top':(600-oImg.outerHeight())/2+'px'});
+        }
 
     });
 

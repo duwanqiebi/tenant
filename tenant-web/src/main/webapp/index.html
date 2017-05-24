@@ -45,7 +45,7 @@
 
 
 
-        <div class="search_db">
+        <div ng-if="!is_homepage()" class="search_db">
             <dl class="secitem secitem_fist">
                 <dd id="secitem-area">
                     <a href="#/search/1" class="select" onclick="clickLog(this)">不限</a>
@@ -175,6 +175,9 @@
             var queryStr = $("#searchInput").val();
             location.href="#/search/" + queryStr + "/1";
         }
+
+
+
     </script>
     <script type="text/javascript" >
         var jiathis_config = {

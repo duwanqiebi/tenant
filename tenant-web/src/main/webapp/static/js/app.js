@@ -5,6 +5,11 @@ var app = angular.module('uiApp', ['ngRoute','ngSanitize']);
 var queryParam ;
 var pageNum;
 
+function homeSearch(){
+    var queryStr = $("#homeSearchInput").val();
+    location.href="#/search/" + queryStr + "/1";
+}
+
 app.config(['$routeProvider',function ($routeProvider) {
     $routeProvider
         .when('/home',
