@@ -1,5 +1,6 @@
 package com.dwqb.tenant.worker;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dwqb.tenant.core.baiduAPI.BaiduMapAPI;
 import com.dwqb.tenant.core.dao.jedis.JedisHashDao;
 import com.dwqb.tenant.core.es.ESUtils;
@@ -13,6 +14,7 @@ import com.dwqb.tenant.core.utils.ObjUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -27,9 +29,14 @@ public class Bayes {
 
     public static final String FALSE_BAYES_WEIGHT_KEY = "tenant:bayes:weight:false";
 
+    public static final String TRUE_BAYES_XIANYAN_KEY = "tenant:bayes:xianyan:true";
+
+    public static final String FALSE_BAYES_XIANYAN_KEY = "tenant:bayes:xianyan:false";
+
     public static final String TRUE_BAYES_CONDITION_KEY = "tenant:bayes:condition:true";
 
     public static final String FALSE_BAYES_CONDITION_KEY = "tenant:bayes:condition:false";
+
 
 
     public void simulateFalseRoom() throws Exception {
@@ -200,9 +207,26 @@ public class Bayes {
 
     /**
      * 计算特征属性的权重
-     * @param roomBayes
+     * @param
      */
-    public void getWeight(List<Room> roomBayes){
+    public void getWeight(List<Room> rooms){
+
+        List<RoomBayes> roomBayes = new ArrayList(rooms.size());
+        int xianyanFalseSize = 0;
+        int xianyanTrueSize = 0;
+        for(Room room : rooms){
+            roomBayes.add(new RoomBayes(room));
+            if("false".equals(room.getStatus())){
+                xianyanFalseSize ++;
+            }else{
+                xianyanTrueSize ++;
+            }
+        }
+        Jedis jedis = RedisUtil.getJedis();
+        jedis.set(TRUE_BAYES_XIANYAN_KEY,new BigDecimal(xianyanTrueSize).divide(new BigDecimal(rooms.size()),4, BigDecimal.ROUND_HALF_EVEN).toString());
+        jedis.set(FALSE_BAYES_XIANYAN_KEY,new BigDecimal(xianyanFalseSize).divide(new BigDecimal(rooms.size()),4,BigDecimal.ROUND_HALF_EVEN).toString());
+        RedisUtil.returnResource(jedis);
+
         Set<String> origins = new HashSet<>();
         Set<String> contractNames = new HashSet<>();
         Set<String> contractTels = new HashSet<>();
@@ -210,7 +234,7 @@ public class Bayes {
         Set<String> dirctions = new HashSet<>();
         Set<String> roomTypes = new HashSet<>();
         Set<String> floors = new HashSet<>();
-        for(Room room : roomBayes){
+        for(RoomBayes room : roomBayes){
             origins.add(room.getRoomOrigin());
             contractNames.add(room.getContractName());
             contractTels.add(room.getContractTel());
@@ -219,13 +243,15 @@ public class Bayes {
             roomTypes.add(room.getRoomType());
             floors.add(room.getFloor());
         }
+
+        jedis = RedisUtil.getJedis();
         for(String s : origins){
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
+            for(RoomBayes room : roomBayes){
+
                 if(room.getRoomOrigin().equals(s)){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
@@ -235,19 +261,25 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : contractNames){
+            if(s == null){
+                continue;
+            }
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
-                if(room.getContractName().equals(s)){
+            for(RoomBayes room : roomBayes){
+                if(s.equals(room.getContractName())){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
                     }else{
@@ -256,19 +288,25 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : contractTels){
+            if(s == null){
+                continue;
+            }
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
-                if(room.getContractTel().equals(s)){
+            for(RoomBayes room : roomBayes){
+                if(s.equals(room.getContractTel())){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
                     }else{
@@ -277,18 +315,23 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
+
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : regions){
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
+            for(RoomBayes room : roomBayes){
                 if(room.getRegion().equals(s)){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
@@ -298,19 +341,26 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
+
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : dirctions){
+            if(s == null){
+                continue;
+            }
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
-                if(room.getDirction().equals(s)){
+            for(RoomBayes room : roomBayes){
+                if(s.equals(room.getDirction())){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
                     }else{
@@ -319,19 +369,26 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
+
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : roomTypes){
+            if(s == null){
+                continue;
+            }
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
-                if(room.getRoomType().equals(s)){
+            for(RoomBayes room : roomBayes){
+                if(s.equals(room.getRoomType())){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
                     }else{
@@ -340,19 +397,26 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
+
         }
+        RedisUtil.returnResource(jedis);
+        jedis = RedisUtil.getJedis();
         for(String s : floors){
+            if(s == null){
+                continue;
+            }
             int trueSize = 0;
             int falseSize = 0;
             int allSize = 0;
             //true
-            for(Room room : roomBayes){
-                allSize ++;
-                if(room.getFloor().equals(s)){
+            for(RoomBayes room : roomBayes){
+                if(s.equals(room.getFloor())){
                     if("false".equals(room.getStatus())){
                         falseSize ++;
                     }else{
@@ -361,10 +425,12 @@ public class Bayes {
                 }
 
             }
-            jedisHashDao.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
-            jedisHashDao.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
-            jedisHashDao.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).toString());
+            allSize = trueSize + falseSize;
+            jedis.hset(TRUE_BAYES_WEIGHT_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(FALSE_BAYES_WEIGHT_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(allSize),4, BigDecimal.ROUND_HALF_EVEN).divide(new BigDecimal(origins.size()),4, BigDecimal.ROUND_HALF_EVEN).add(new BigDecimal("1")).toString());
+            jedis.hset(TRUE_BAYES_CONDITION_KEY,s,new BigDecimal(trueSize).divide(new BigDecimal(xianyanTrueSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            jedis.hset(FALSE_BAYES_CONDITION_KEY,s,new BigDecimal(falseSize).divide(new BigDecimal(xianyanFalseSize),4,BigDecimal.ROUND_HALF_EVEN).toString());
+            System.out.println(s);
         }
     }
 
@@ -392,6 +458,155 @@ public class Bayes {
             }
         }
         return curRooms;
+    }
+
+
+
+    //测试代码
+    public void test() throws Exception {
+        List<Room> falseRooms = new ArrayList<>();
+        List<Room> rooms = getAll();
+        for(Room room : rooms){
+            if("false".equals(room.getStatus())){
+                falseRooms.add(room);
+            }
+        }
+
+        List<Long> resultIds = new ArrayList<>();   //虚假房源id集合
+        for(Room room : falseRooms){
+            RoomBayes roomBayes  = new RoomBayes(room);
+            //计算概率
+            Boolean result = calBayes(roomBayes);
+            if(result == false){
+                resultIds.add(room.getId());
+            }
+        }
+
+        //计算准确率
+        double exactNum = 0;
+        for(Room room : falseRooms){
+            if(resultIds.contains(room.getId())){
+                exactNum ++ ;
+            }
+        }
+        System.out.println("准确率 = " + exactNum/(double)falseRooms.size());
+
+    }
+
+    private Boolean calBayes(RoomBayes roomBayes) {
+        Jedis jedis = RedisUtil.getJedis();
+        String trueXianyan = jedis.get(TRUE_BAYES_XIANYAN_KEY);
+        String falseXianyan = jedis.get(FALSE_BAYES_XIANYAN_KEY);
+
+        Map<String,String> trueWeigthMap = new HashMap<>();
+        Map<String,String> trueConditionMap = new HashMap<>();
+        Map<String,String> falseWeightMap = new HashMap<>();
+        Map<String,String> falseConditionMap = new HashMap<>();
+
+        String roomOriginTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getRoomOrigin());
+        trueWeigthMap.put("origin",roomOriginTrueWeightStr);
+        String roomOriginFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getRoomOrigin());
+        falseWeightMap.put("origin",roomOriginFalseWeightStr);
+        String riimOgiginTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getRoomOrigin());
+        trueConditionMap.put("origin",riimOgiginTrueConditionStr);
+        String riimOgiginfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getRoomOrigin());
+        falseConditionMap.put("origin",riimOgiginfalseConditionStr);
+
+        String contractTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getContractName());
+        trueWeigthMap.put("contractName",contractTrueWeightStr);
+        String contractFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getContractName());
+        falseWeightMap.put("contractName",contractFalseWeightStr);
+        String contractTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getContractName());
+        trueConditionMap.put("contractName",contractTrueConditionStr);
+        String contractfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getContractName());
+        falseConditionMap.put("contractName",contractfalseConditionStr);
+
+        String contractTelTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getContractTel());
+        trueWeigthMap.put("contractTel",contractTelTrueWeightStr);
+        String contractTelFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getContractTel());
+        falseWeightMap.put("contractTel",contractTelFalseWeightStr);
+        String contractTelTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getContractTel());
+        trueConditionMap.put("contractTel",contractTelTrueConditionStr);
+        String contractTelfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getContractTel());
+        falseConditionMap.put("contractTel",contractTelfalseConditionStr);
+
+        String directionTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getDirction());
+        trueWeigthMap.put("direction",directionTrueWeightStr);
+        String directionFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getDirction());
+        falseWeightMap.put("direction",directionFalseWeightStr);
+        String directionTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getDirction());
+        trueConditionMap.put("direction",directionTrueConditionStr);
+        String directionfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getDirction());
+        falseConditionMap.put("direction",directionfalseConditionStr);
+
+        String floorTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getFloor());
+        trueWeigthMap.put("floor",floorTrueWeightStr);
+        String floorFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getFloor());
+        falseWeightMap.put("floor",floorFalseWeightStr);
+        String floorTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getFloor());
+        trueConditionMap.put("floor",floorTrueConditionStr);
+        String floorfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getFloor());
+        falseConditionMap.put("floor",floorfalseConditionStr);
+
+        String regionTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getRegion());
+        trueWeigthMap.put("region",regionTrueWeightStr);
+        String regionFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getRegion());
+        falseWeightMap.put("region",regionFalseWeightStr);
+        String regionTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getRegion());
+        trueWeigthMap.put("region",regionTrueConditionStr);
+        String regionfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getRegion());
+        falseWeightMap.put("region",regionfalseConditionStr);
+
+        String roomTypeTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getRoomType());
+        trueWeigthMap.put("roomType",roomTypeTrueWeightStr);
+        String roomTypeFalseWeightStr = jedis.hget(FALSE_BAYES_WEIGHT_KEY,roomBayes.getRoomType());
+        falseWeightMap.put("roomType",roomTypeFalseWeightStr);
+        String roomTypeTrueConditionStr = jedis.hget(TRUE_BAYES_CONDITION_KEY,roomBayes.getRoomType());
+        trueConditionMap.put("roomType",roomTypeTrueConditionStr);
+        String roomTypefalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getRoomType());
+        falseConditionMap.put("roomType",roomTypefalseConditionStr);
+
+        //P(true)
+        BigDecimal powResult = BigDecimal.ZERO;
+        for(Map.Entry<String,String> entry : trueConditionMap.entrySet()){
+            String name = entry.getKey();
+            String condition = entry.getValue();
+            if(StringUtils.isBlank(condition)){
+                continue;
+            }
+            String weight = trueWeigthMap.get(name);
+            if(StringUtils.isBlank(weight)){
+                weight = "1";
+            }
+
+            Double pwdResult = Math.pow(Double.parseDouble(condition),Double.parseDouble(weight));
+            powResult = powResult.add(new BigDecimal(pwdResult));
+        }
+        BigDecimal trueBayes = powResult.multiply(new BigDecimal(trueXianyan));
+
+        //P(false)
+        powResult = BigDecimal.ZERO;
+        for(Map.Entry<String,String> entry : falseConditionMap.entrySet()){
+            String name = entry.getKey();
+            String condition = entry.getValue();
+            if(StringUtils.isBlank(condition)){
+                continue;
+            }
+            String weight = falseWeightMap.get(name);
+            if(StringUtils.isBlank(weight)){
+                weight = "1";
+            }
+
+            Double pwdResult = Math.pow(Double.parseDouble(condition),Double.parseDouble(weight));
+            powResult = powResult.add(new BigDecimal(pwdResult));
+        }
+        BigDecimal falseBayes = powResult.multiply(new BigDecimal(falseXianyan));
+
+        System.out.println(trueBayes + "   ;   " + falseBayes);
+        if(falseBayes.compareTo(trueBayes) > 0){
+            return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) throws Exception {

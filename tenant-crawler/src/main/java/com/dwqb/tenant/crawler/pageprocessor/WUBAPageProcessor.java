@@ -40,6 +40,7 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
 
             urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
+            logger.info("添加明细共" + urls.size());
         }
         else{                                                              //详情页
             if(this.isDetailHandled(curUrl)){
@@ -90,11 +91,12 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
             String contractName = html.xpath("//p[@class='agent-name f16 pr']/a/text()").get();
             String contractTel = html.xpath("//em[@class='phone-num']/text()").get();
             String description = html.xpath("//div[@class='house-word-introduce f16 c_555']").get();
-            List<String> imgList = html.xpath("//div[@class='basic-pic-list pr']//img/@src").all();
+            List<String> imgList = html.xpath("//div[@class='basic-pic-list pr']//li/@data-src").all();
 
+
+            Room room = new Room(null, RoomOrigin.WUBA.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
             Long id = IdGenerator.getId();
-            Room room = new Room(id, RoomOrigin.WUBA.toString(),curUrl,contractName,contractTel,null,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
-
+            room.setId(id);
             //es
             String json = JsonUtils2.obj2Json(room);
             ESUtils.curl("http://112.74.79.166:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
@@ -127,6 +129,14 @@ public class WUBAPageProcessor extends AbstractPageProcessor{
     public void doCrawerByNum(String s) {
         Spider ziruSpider = Spider.create(new WUBAPageProcessor());
         ziruSpider.addUrl("http://bj.58.com/zufang/pn" + s);
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(4000));
+        ziruSpider.run();
+    }
+
+    public static void main(String[] args){
+        Spider ziruSpider = Spider.create(new WUBAPageProcessor());
+        ziruSpider.addUrl("http://bj.58.com/zufang/pn" + 1);
         ziruSpider.thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(4000));
         ziruSpider.run();

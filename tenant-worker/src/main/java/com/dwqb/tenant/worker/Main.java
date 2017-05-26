@@ -1,5 +1,6 @@
 package com.dwqb.tenant.worker;
 
+import com.dwqb.tenant.core.model.Room;
 import com.dwqb.tenant.core.model.RoomBayes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -13,15 +14,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ApplicationContext applicationContext  = new ClassPathXmlApplicationContext("classpath:spring/application-worker.xml");
         Bayes bayes = applicationContext.getBean(Bayes.class);
-        bayes.simulateFalseRoom();
-//        List<RoomBayes> roomBayes = bayes.getAll();
-//        for(int i = 0 ; i < roomBayes.size() ; i ++){
-//            if(i <= 60){
-//                roomBayes.get(i).setStatus("true");
-//            }else{
-//                roomBayes.get(i).setStatus("false");
-//            }
-//        }
+//        bayes.simulateFalseRoom();
+//        List<Room> roomBayes = bayes.getAll();
 //        bayes.getWeight(roomBayes);
+        bayes.test();
     }
 }

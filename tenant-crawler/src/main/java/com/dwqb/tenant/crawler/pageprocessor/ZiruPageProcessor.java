@@ -36,6 +36,7 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             List<String> urls = html.css(".t1").links().all();
             urls = this.removeDuplicate(urls);
             page.addTargetRequests(urls);
+            logger.info("共获取明细共" + urls.size());
         }else{                                  //详情页
 
             if(this.isDetailHandled(curUrl)){
@@ -58,17 +59,8 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             String priceType = html.css(".price .gray-6").get();    //付款方式
 
             String isShare = html.css(".icons").get();      //整租
-            String status = null;
-            if(isShare.equals("整")){
-                for (String item : html.css(".current .tags").all()){
-                    if ("当前房源".equals(item)){
-                        status="可租";
-                        break;
-                    }
-                }
-            }else{
-                status="可租";
-            }
+            String status = "true";
+
 
 
             List<Selectable> detailRooms = html.css(".detail_room > li").nodes();
@@ -124,8 +116,9 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             imgList = this.removeDuplicate(imgList);
 
 
+            Room room = new Room(null,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,"true",Double.parseDouble(space),dirction,struct,roomType != null? roomType.toString():struct,floor,imgList);
             Long id = IdGenerator.getId();
-            Room room = new Room(id,RoomOrigin.ZI_RU.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),priceType,"true",Double.parseDouble(space),dirction,struct,roomType != null? roomType.toString():struct,floor,imgList);
+            room.setId(id);
 
             //es
             String json = JsonUtils2.obj2Json(room);
@@ -150,6 +143,14 @@ public class ZiruPageProcessor extends AbstractPageProcessor{
             ziruSpider.addUrl("http://www.ziroom.com/z/nl/?p=" + num);
             num --;
         }
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(5000));
+        ziruSpider.run();
+    }
+
+    public  void doCrawerByNum(String pageNum) {
+        Spider ziruSpider = Spider.create(new ZiruPageProcessor());
+        ziruSpider.addUrl("http://www.ziroom.com/z/nl/?p=" + pageNum);
         ziruSpider.thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(5000));
         ziruSpider.run();

@@ -82,10 +82,12 @@ public class LianjiaPageProcessor extends AbstractPageProcessor{
 
             List<String> imgList = html.xpath("//div[@class='thumbnail']//img/@src").all();
 
+
+            Room room = new Room(null, RoomOrigin.LIAN_JIA.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
             Long id = IdGenerator.getId();
-            Room room = new Room(id, RoomOrigin.LIAN_JIA.toString(),curUrl,contractName,contractTel,subwayDescrption,description,roomName,Double.parseDouble(price),longitude,latitude,region.toString(),null,null,Double.parseDouble(space),direction,struct,roomType != null? roomType.toString():struct,floor,imgList);
+            room.setId(id);
             room.setStatus("true");
-            logger.info(JsonUtils2.obj2Json(room));
+//            logger.info(JsonUtils2.obj2Json(room));
             ESUtils.curl("http://112.74.79.166:9200/room/room/" + String.valueOf(id) ,"PUT", JsonUtils2.obj2Json(room));
             this.handled(curUrl);
 

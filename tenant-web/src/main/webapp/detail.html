@@ -39,7 +39,7 @@
         <div class="room_detail_left">
 
 
-            <div id="lofslidecontent45" class="lof-slidecontent">
+            <div id="lofslidecontent45">
                 <div class="preload"><div></div></div>
 
 
@@ -84,6 +84,54 @@
 
             <button class="btn btn-primary" onclick="report()">虚假房源举报</button>
         </div>
+
+
+
+        <div id="bigPhotShow" class="modal">
+            <a href="javascript:;" class="close"></a>
+            <div id="lofslidecontent46" class="lof-slidecontent current_lof">
+                <div class="lof-main-outer">
+                    <div onclick="return false" href="javascript:;" class="lof-previous icon icon-prev"></div><!--lof-previous -->
+                    <ul class="lof-main-wapper" style="margin: -194px auto;">
+                        <!--<li>-->
+
+                            <!--<a href="http://pic.ziroom.com/house_images/g2/M00/33/C1/v800x600_ChAFFVitrJqAMHUNAAjRB8US-60314.JPG" class="pirobox_t6">-->
+                                <!--<img src="http://pic.ziroom.com/house_images/g2/M00/33/C1/v800x600_ChAFFVitrJqAMHUNAAjRB8US-60314.JPG" onerror="this.src='http://www.ziroom.com/static/images/slist_1207/buding-up.jpg'" alt="海淀海淀北部新区16号线永丰大牛坊四期3居室" title="海淀海淀北部新区16号线永丰大牛坊四期3居室" style="margin-top: 250px;">-->
+                            <!--</a>-->
+                        <!--</li>-->
+
+                    </ul>
+                    <div onclick="return false" href="javascript:;" class="lof-next icon icon-next"></div><!--lof-next -->
+                </div><!--lof-main-outer -->
+
+            </div><!--大焦点图结束-->
+        </div>
+
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            模态框（Modal）标题
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        在这里添加一些文本
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            提交更改
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
     </div>
 </div>
 
@@ -94,11 +142,13 @@
 <script src="http://code.angularjs.org/1.2.20/angular-sanitize.min.js"></script>
 <script src="static/bootstrap3/js/bootstrap.min.js"></script>
 <script src="static/js/app.js"></script>
+<script src="static/js/z-common.js"></script>
 <script src="static/js/services.js"></script>
 <script src="static/js/script.js"></script>
 <script src="static/js/jquery.easing.js"></script>
 <script src="static/js/controllers.js"></script>
 <script src="static/js/echarts.min.js"></script>
+<script src="static/js/referrer-killer.js"></script>
 <!--<script src="http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>-->
 <!--<script type="text/javascript" >-->
     <!--var jiathis_config = {-->
@@ -123,7 +173,7 @@
 
         $("#title").text(house.name);
         for(index in house.imgList){
-
+//            imghtml = ReferrerKiller.imageHtml(house.imgList[index]);
             var html = '<li><span class="woshi"></span><a href="' + house.imgList[index] +'" class="pirobox_t6">'
                        + '<img style="margin: 0 auto;max-width: 632px;max-height: 475px;width: 100%;height: 100%;" src="' + house.imgList[index] +'"></a></li>';
             var nonehtml = '<li style="display: none\;"><span class="woshi"></span><a href="' + house.imgList[index] +'" class="pirobox_t6">'
@@ -143,6 +193,9 @@
             }else{
                 $(".lof-navigator").append(naviNoneHtml);
             }
+
+//            var hidehtml = '<li><a href="' + house.imgList[index] + '" class="pirobox_t6"><img src="' +house.imgList[index]+'" stype="margin-top:250px"></a></li>';
+//            $("")
 
         }
 
@@ -201,13 +254,19 @@
         var photoLen   = $('#lofslidecontent45 .lof-main-wapper li').size();
         console.log("photoLen = " + photoLen);
         $('.pirobox_t6').click(function(){
+            alert("1");
             photoIndex = $(this).parent().index();
             $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).show().siblings().hide();
 
-            $('#bigPhotShow').show();
+            $('#bigPhotShow').modal('show');
+
+//            $("#myModal").modal('show');
+
+
             marTopCount(photoIndex);
             return false;
         });
+
 
         $('#lofslidecontent45 .lof-next').click(function(){
             photoIndex++;
@@ -217,7 +276,7 @@
         });
 
         $('#bigPhotShow .close').click(function(){
-            $('#bigPhotShow').hide();
+            $('#bigPhotShow').modal('hide');
         });
 
         $('#lofslidecontent45 .icon-prev').click(function(){
@@ -229,7 +288,6 @@
 
         function marTopCount(photoIndex){
             var oImg = $('#lofslidecontent45 .lof-main-wapper li').eq(photoIndex).find('img');
-//            oImg.css({'margin-top':(600-oImg.outerHeight())/2+'px'});
         }
 
     });

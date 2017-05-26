@@ -1,5 +1,6 @@
 package com.dwqb.tenant.crawler.pageprocessor;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.dwqb.tenant.core.baiduAPI.BaiduMapAPI;
 import com.dwqb.tenant.core.es.ESUtils;
 import com.dwqb.tenant.core.model.Region;
@@ -18,6 +19,7 @@ import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -65,7 +67,17 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
             Region region = BaiduMapAPI.covertLocation(longitude,latitude);         //区域
 
             //img
-            List<String> imgList = html.xpath("//div[@class='picCon']//img/@src").all();
+            List<String> imgList = new ArrayList<>();
+            List<Selectable> imgSelects = html.xpath("//div[@class='bigps photoslide cf']").nodes().get(0).xpath("//div[@class='picCon']//ul/li").nodes();
+            for(Selectable selectable : imgSelects){
+                String img = selectable.xpath("//img/@data-src").get();
+                if(StringUtils.isBlank(img)){
+                    img = selectable.xpath("//img/@src").get();
+                }
+                if(!StringUtils.isBlank(img)){
+                    imgList.add(img);
+                }
+            }
 
             String contractName = html.xpath("//h2[@id='broker_true_name']/text()").get();
             String contractTel = html.xpath("//p[@class='broker-mobile']/text()").get().replace(" ","");
@@ -106,6 +118,14 @@ public class AnjukePageProcessor extends AbstractPageProcessor{
     public void doCrawerByNum(String pageNum) {
         Spider ziruSpider = Spider.create(new AnjukePageProcessor());
         ziruSpider.addUrl("http://bj.zu.anjuke.com/fangyuan/p" + pageNum + "/");
+        ziruSpider.thread(1);
+        ziruSpider.setEmptySleepTime(new Random().nextInt(2000));
+        ziruSpider.run();
+    }
+
+    public static void main(String[] args){
+        Spider ziruSpider = Spider.create(new AnjukePageProcessor());
+        ziruSpider.addUrl("http://bj.zu.anjuke.com/fangyuan/p1/");
         ziruSpider.thread(1);
         ziruSpider.setEmptySleepTime(new Random().nextInt(2000));
         ziruSpider.run();

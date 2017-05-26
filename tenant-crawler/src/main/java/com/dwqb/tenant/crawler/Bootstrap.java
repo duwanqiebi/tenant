@@ -15,18 +15,21 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Bootstrap {
     public static void main(String[] args){
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring/application-crawler.xml");
+        //anjuke
 //        AnjukePageProcessor processor = applicationContext.getBean(AnjukePageProcessor.class);
-////        processor.doCrawer("10");
-//        processor.doCrawerByNum("10");   //anjuke
+//        processor.doCrawerByNum("20");
 
         //58
 //        WUBAPageProcessor processor = applicationContext.getBean(WUBAPageProcessor.class);
-//        processor.doCrawerByNum("11");
-
+//        processor.doCrawerByNum("27");
+//
         //ziru
-        ZiruPageProcessor processor = applicationContext.getBean(ZiruPageProcessor.class);
-        processor.doCrawer("10");
+//        ZiruPageProcessor processor = applicationContext.getBean(ZiruPageProcessor.class);
+//        processor.doCrawerByNum("53");
 
+        //lianjia
+        LianjiaPageProcessor processor = applicationContext.getBean(LianjiaPageProcessor.class);
+        processor.doCrawerByNum("13");
     }
 
 
