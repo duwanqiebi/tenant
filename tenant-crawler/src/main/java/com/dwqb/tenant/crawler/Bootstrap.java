@@ -29,7 +29,7 @@ public class Bootstrap {
 
         //lianjia
         LianjiaPageProcessor processor = applicationContext.getBean(LianjiaPageProcessor.class);
-        processor.doCrawerByNum("13");
+        processor.doCrawerByNum("61");
     }
 
 

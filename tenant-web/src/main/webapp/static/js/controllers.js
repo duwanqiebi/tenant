@@ -82,10 +82,12 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         $scope.page_count = 10;
         $scope.page_num = $routeParams.page_num;
         pageNum = $routeParams.page_num;
-        // $scope.page_next = data.page_next;
-        // $scope.page_prev = data.page_prev;
-        $scope.page_next = $routeParams.page_num, + 1;
-        $scope.page_prev = $routeParams.page_num, - 1;
+        $scope.page_next = pageNum + 1;
+        if(pageNum == 1){
+            $scope.page_prev = 1;
+        }else{
+            $scope.page_prev = pageNum - 1;
+        }
         console.log(data);
         globledata = data;
         if(data == ""){
