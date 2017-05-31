@@ -54,6 +54,8 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     
     //区域
     var area = $("#secitem-area").find(".select").html();
+    //price
+    var price = $("#secitem-rent").find(".select").html();
     //厅室
     var room = $("#secitem-room").find(".select").html();
     //租房类型
@@ -62,6 +64,7 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     var brand = $("#secitem-brand").find(".select").html();
     //地铁
     var subway = $("#secitem-subway").find(".select").html();
+    var space = $("#secitem-space").find(".select").html();
 
     var json = {};
     json.area=area;
@@ -69,6 +72,8 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
     json.type=type;
     json.brand=brand;
     json.subway=subway;
+    json.price = price;
+    json.space= space;
 
 
     House.search($routeParams.query,json, $routeParams.page_num, function(data) {
@@ -82,11 +87,11 @@ app.controller('SearchController', function($rootScope, $scope, $location, $rout
         $scope.page_count = 10;
         $scope.page_num = $routeParams.page_num;
         pageNum = $routeParams.page_num;
-        $scope.page_next = pageNum + 1;
+        $scope.page_next = parseInt(pageNum) + 1;
         if(pageNum == 1){
             $scope.page_prev = 1;
         }else{
-            $scope.page_prev = pageNum - 1;
+            $scope.page_prev = parseInt(pageNum) - 1;
         }
         console.log(data);
         globledata = data;
@@ -143,6 +148,8 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
 
     //区域
     var area = $("#secitem-area").find(".select").html();
+    //price
+    var price = $("#secitem-rent").find(".select").html();
     //厅室
     var room = $("#secitem-room").find(".select").html();
     //租房类型
@@ -151,6 +158,7 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
     var brand = $("#secitem-brand").find(".select").html();
     //地铁
     var subway = $("#secitem-subway").find(".select").html();
+    var space = $("#secitem-space").find(".select").html();
 
     var json = {};
     json.area=area;
@@ -158,7 +166,8 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
     json.type=type;
     json.brand=brand;
     json.subway=subway;
-
+    json.price = price;
+    json.space= space;
 
     House.search($routeParams.query,json, $routeParams.page_num, function(data) {
         console.log($routeParams);
@@ -170,8 +179,13 @@ app.controller('Search1Controller', function($rootScope, $scope, $location, $rou
         $scope.page_num = 1;
         // $scope.page_next = data.page_next;
         // $scope.page_prev = data.page_prev;
-        $scope.page_next = $routeParams.page_num, + 1;
-        $scope.page_prev = $routeParams.page_num, - 1;
+        pageNum = $routeParams.page_num;
+        $scope.page_next = parseInt(pageNum) + 1;
+        if(pageNum == 1){
+            $scope.page_prev = 1;
+        }else{
+            $scope.page_prev = parseInt(pageNum) - 1;
+        }
         $scope.houses = data.houses;
 
 

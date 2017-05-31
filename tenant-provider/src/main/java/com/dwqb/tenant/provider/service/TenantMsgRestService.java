@@ -44,6 +44,70 @@ public class TenantMsgRestService implements ITenantMsgService{
         Map query = new HashMap();
         Map bool =  new HashMap();
         List must =  new ArrayList();
+        if(!"不限".equals(requestJson.getSpace()) && !StringUtils.isBlank(requestJson.getSpace())) {
+            String originContent = requestJson.getSpace();
+            Map range = new HashMap();
+            String content = originContent;
+            if(content.contains("以")){
+                content = content.substring(0,content.length() -2);
+            }
+            String[] spaces = content.split("-");
+            if(spaces.length == 2){
+                Map priceMap = new HashMap();
+                priceMap.put("gte",spaces[0]);
+                priceMap.put("lte",spaces[1]);
+                range.put("space",priceMap);
+            }else if(spaces.length == 1){
+                Map priceMap = new HashMap();
+                if(originContent.contains("下")){
+                    priceMap.put("lte",spaces[0]);
+                    range.put("space",priceMap);
+                }else if(originContent.contains("上")){
+                    priceMap.put("gte",spaces[0]);
+                    range.put("space",priceMap);
+                }
+            }
+            Map rangeMap = new HashMap();
+            rangeMap.put("range",range);
+            must.add(rangeMap);
+        }
+        if(!"不限".equals(requestJson.getPrice()) && !StringUtils.isBlank(requestJson.getPrice())) {
+            String orgincontent = requestJson.getPrice();
+            Map range = new HashMap();
+            String content = orgincontent;
+            if(content.contains("元以")){
+                content = content.substring(0,content.length() - 3);
+            }else if(content.contains("元")){
+                content = content.substring(0, content.length() -1 );
+            }
+            String[] prices = content.split("-");
+            if(prices.length == 2){
+
+               Map priceMap = new HashMap();
+                priceMap.put("gte",prices[0]);
+                priceMap.put("lte",prices[1]);
+                range.put("price",priceMap);
+            }else if(prices.length == 1){
+                Map priceMap = new HashMap();
+                if(orgincontent.contains("上")){
+                    priceMap.put("gte",prices[0]);
+                    range.put("price",priceMap);
+
+                }else if(orgincontent.contains("下")){
+                    priceMap.put("lte",prices[0]);
+                    range.put("price",priceMap);
+
+                }
+            }
+
+            Map rangeMap = new HashMap();
+            rangeMap.put("range",range);
+            must.add(rangeMap);
+        }
+
+
+
+
         if(!"不限".equals(requestJson.getArea()) && !StringUtils.isBlank(requestJson.getArea())){
             Map term = new HashMap();
             term.put("region",requestJson.getArea());

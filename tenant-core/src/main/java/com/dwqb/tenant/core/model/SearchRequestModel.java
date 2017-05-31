@@ -20,15 +20,37 @@ public class SearchRequestModel implements Serializable {
 
     private String subway;
 
+    private String price;
+
+    private String space;
+
     public SearchRequestModel() {
     }
 
-    public SearchRequestModel(String area, String room, String type, String brand, String subway) {
+    public SearchRequestModel(String area, String room, String type, String brand, String subway, String price, String space) {
         this.area = area;
         this.room = room;
         this.type = type;
         this.brand = brand;
         this.subway = subway;
+        this.price = price;
+        this.space = space;
+    }
+
+    public String getSpace() {
+        return space;
+    }
+
+    public void setSpace(String space) {
+        this.space = space;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getArea() {

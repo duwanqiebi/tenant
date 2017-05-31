@@ -49,7 +49,10 @@
                 </div>
                 <div class="txt">
                     <h3>
-                        <a ng-click="detail(house.id,house)" ng-bind-html="house.name | to_trusted">{{house.name}}</a>
+                        <a ng-click="detail(house.id,house)" ng-bind-html="house.name | to_trusted">
+                            {{house.name}}
+                        </a>
+                        <span ng-if="house.status=='false'" style="color:#F00">(此房源疑似虚假房源!!)</span>
                     </h3>
                     <p>
                         <span>{{house.struct}}</span>

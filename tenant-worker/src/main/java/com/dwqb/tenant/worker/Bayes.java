@@ -102,6 +102,9 @@ public class Bayes {
                     allspace += room.getSpace();
                 }
             }
+            if(allspace == 0){
+                continue;
+            }
             roomTypesMap.put(s,new BigDecimal(allprice).divide(new BigDecimal(allspace),4,BigDecimal.ROUND_HALF_EVEN));
         }
         for(String s : floors){
@@ -139,8 +142,15 @@ public class Bayes {
             room.setName("虚假房源" + i);
             room.setStatus("false");
             room.setSubway(Collections.<String>emptyList());
-            room.setContractName(falseContractName.get(random.nextInt(falseContractName.size() -1)));
-            room.setContractTel(falseContractTel.get(random.nextInt(falseContractTel.size() -1)));
+
+            if(i%3 == 0){
+                room.setContractName(falseContractName.get(random.nextInt(falseContractName.size() -1)));
+                room.setContractTel(falseContractTel.get(random.nextInt(falseContractTel.size() -1)));
+            }else{
+                room.setContractName(list.get(random.nextInt(size -1)).getContractName());
+                room.setContractTel(list.get(random.nextInt(size -1)).getContractTel());
+            }
+
             room.setDescription("虚假房源模拟");
             room.setDirction(list.get(random.nextInt(size - 1)).getDirction());
             room.setFloor(list.get(random.nextInt(size - 1)).getFloor());
@@ -177,7 +187,8 @@ public class Bayes {
                     price = curPrice;
                 }
             }
-            room.setPrice(price.multiply(new BigDecimal(room.getSpace())).multiply(new BigDecimal(3).divide(new BigDecimal(4))).doubleValue());
+            room.setPrice(price.multiply(new BigDecimal(room.getSpace())).doubleValue());
+//            room.setPrice(price.multiply(new BigDecimal(room.getSpace())).multiply(new BigDecimal(3).divide(new BigDecimal(4))).doubleValue());
             ESUtils.curl("http://112.74.79.166:9200/room/room/" + room.getId() ,"PUT", JsonUtils2.obj2Json(room));
         }
 
@@ -520,6 +531,10 @@ public class Bayes {
         trueConditionMap.put("contractName",contractTrueConditionStr);
         String contractfalseConditionStr = jedis.hget(FALSE_BAYES_CONDITION_KEY,roomBayes.getContractName());
         falseConditionMap.put("contractName",contractfalseConditionStr);
+
+        if(roomBayes.getContractTel() == null){
+            roomBayes.setContractTel("");
+        }
 
         String contractTelTrueWeightStr = jedis.hget(TRUE_BAYES_WEIGHT_KEY,roomBayes.getContractTel());
         trueWeigthMap.put("contractTel",contractTelTrueWeightStr);
