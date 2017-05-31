@@ -2,8 +2,8 @@
 
 app.factory('House', function($http) {
     
-    // var api = "http://112.74.79.166:8888/api/atp/java/v1/tenant";
-    var api = "http://127.0.0.1:8888/api/atp/java/v1/tenant"
+    var api = "http://112.74.79.166:8888/api/atp/java/v1/tenant";
+    // var api = "http://127.0.0.1:8888/api/atp/java/v1/tenant"
     return {
         search: function(query,json, page_num, callback) {
             // var uri = api + '/search/' + query;

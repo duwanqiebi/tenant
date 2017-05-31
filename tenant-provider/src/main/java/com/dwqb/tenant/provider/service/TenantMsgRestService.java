@@ -220,6 +220,9 @@ public class TenantMsgRestService implements ITenantMsgService{
                     if(source.get("subway") == null || "null".equals(source.get("subway"))){
                         source.put("subway",new ArrayList<String>());
                     }
+                    if(source.get("imgList") == null || "null".equals(source.get("imgList"))){
+                        source.put("imgList",new ArrayList<String>());
+                    }
                     room = (Room) ObjUtils.mapToObject(source,Room.class);
 
                     //高亮字段解析
